@@ -1,5 +1,5 @@
 Source: vibe2gui
-Section: science
+Section: unknown
 Priority: extra
 Maintainer: Christian Urich <christian.urich@gmail.com>
 Build-Depends: cmake, debhelper (>= 7.0.50~), cmake,  python(>=2.6.0~), python-dev(>=2.6.0~), libboost-python-dev(>=1.36.0~), libqt4-opengl-dev, libboost-program-options1.42-dev(>=1.36.0~), libboost-date-time1.42-dev(>=1.36.0~), libqt4-dev(>=4.6.0~), vibe2core(>=1.0.1~), vibe2core-dev(>=1.0.1~), libqglviewer-qt4-2(>=2.3.4)
