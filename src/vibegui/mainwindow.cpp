@@ -299,10 +299,10 @@ void MainWindow::createModuleListView() {
     //Add VIBe Modules
     QStringList filters;
     filters << "*.vib";
-     QSettings settings("IUT", "VIBe2");
+   QSettings settings("IUT", "VIBe2");
     QStringList moduleshome = settings.value("VIBeModules",QStringList()).toString().replace("\\","/").split(",");
     for (int index = 0; index < moduleshome.size(); index++) {
-        QDir d = QDir(moduleshome[0]);
+        QDir d = QDir(moduleshome[index]);
         QStringList list = d.entryList(filters);
         QString module_name = d.absolutePath().split("/").last();
         mMap.clear();
