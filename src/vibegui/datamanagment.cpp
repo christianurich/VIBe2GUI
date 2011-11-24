@@ -33,7 +33,7 @@
 void DataManagment::observeNewVectorData(vibens::Module * module, std::string name) {
 
    //if (name.compare("VectorDataTo_85") == 0 || name.compare("VectorData_out_117") == 0 || name.compare("VectorData_out_118") == 0 ) {
-        QTreeWidgetItem * item = new QTreeWidgetItem();
+        /*QTreeWidgetItem * item = new QTreeWidgetItem();
         item->setText(0, QString::fromStdString(name));
         QTreeWidgetItem * itemPoints = new QTreeWidgetItem();
         itemPoints->setText(0, "Points");
@@ -56,13 +56,13 @@ void DataManagment::observeNewVectorData(vibens::Module * module, std::string na
             itemLines->addChild(itemLine);
         }
         this->vec_data[name] = vec;
-        rootVectorItem->addChild(item);
+        rootVectorItem->addChild(item);*/
 
    //}
 
 
 }
-DataManagment::DataManagment(QTreeWidgetItem * rootItem, Viewer * viewer, Plot * plot)
+DataManagment::DataManagment(QTreeWidgetItem * rootItem, Plot *plot)
 {
     x = 10;
     this->rootVectorItem = new QTreeWidgetItem();
@@ -72,7 +72,6 @@ DataManagment::DataManagment(QTreeWidgetItem * rootItem, Viewer * viewer, Plot *
 
     rootItem->addChild(rootVectorItem);
     rootItem->addChild(rootRasterItem);
-    this->viewer = viewer;
     this->plot = plot;
 
 }
@@ -97,7 +96,7 @@ void DataManagment::deleteTreeWidgetItem(QTreeWidgetItem* item)
 void DataManagment::observeNewRasterData(vibens::Module * module, std::string name) {
    //if (name.compare("MarkerMap_67") == 0 || name.compare("MarkerMap_74") == 0) {
          //if (name.compare("MarkerMap_67") == 0 || name.compare("Street") == 0 || name.compare("Agents") == 0 ) {
-        RasterData rData = module->getRasterData(name);
+        /*RasterData rData = module->getRasterData(name);
 
         if (name.compare("Agents") == 0 || name.compare("Tracks") == 0) {
             double val = rData.getSum();
@@ -114,7 +113,7 @@ void DataManagment::observeNewRasterData(vibens::Module * module, std::string na
         item->setText(0, QString::fromStdString(name));
         rootRasterItem->addChild(item);
 
-        this->r_data[name] = rData;
+        this->r_data[name] = rData;*/
 
     //}
 
@@ -126,10 +125,10 @@ void DataManagment::observerDeletedRasterData(vibens::Module * module) {
 void DataManagment::observerDeletedVectorData(vibens::Module *   module) {
 }
 void DataManagment::setCurrentScene(std::string scene, int ID){
-    this->currentScene = scene;
+    /*this->currentScene = scene;
     if ( ID == VECTORDATA)
         viewer->setVectorData(this->vec_data[scene]);
     if ( ID == RASTERDATA)
-        viewer->setRasterData(this->r_data[scene]);
+        viewer->setRasterData(this->r_data[scene]);*/
 
 }

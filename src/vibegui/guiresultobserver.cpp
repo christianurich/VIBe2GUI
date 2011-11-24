@@ -71,29 +71,3 @@ void GUIResultObserver::addDoubleDataToPlot(std::string UUID, double x, double y
     emit newDoubleDataForPlot( x, y);
 
 }
-void GUIResultObserver::addVectorDataToViewer( QVector<VectorData> r) {
-    this->UUID = UUID;
-    if (!ResultWidget) {
-        ResultWidget = true;
-        emit register3DWidget(this, r);
-    } else {
-        std::cout << "EMIT updateVectorDatafrom Observer" << std::endl;
-        emit newVectorData(r);
-    }
-}
-
-void GUIResultObserver::addRasterDataToViewer( QVector<RasterData> r) {
-    this->UUID = UUID;
-    //std::cout << "Do something with Image" << std::endl;
-    //std::cout << name << std::endl;
-    if (!ResultWidget) {
-        std::cout << "Create 3D" << std::endl;
-        ResultWidget = true;
-        //firstImage = name;
-        emit register3DWidget(this, r);
-    } else {
-        std::cout << "EMIT updateRasterData from Observer" << std::endl;
-        emit newRasterData(r);
-        //emit updateRasterData(QString::fromStdString(UUID), QString::fromStdString(name));
-    }
-}

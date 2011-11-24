@@ -127,14 +127,6 @@ void GroupNode::updatePorts () {
 void GroupNode::addTuplePort(vibens::PortTuple * p) {
     QStringList ExistingPorts;
 
-    if (p->getPortType() == vibens::VIBe2::INTUPLERASTER)
-        ExistingPorts = this->ExistingInPorts;
-    if (p->getPortType() == vibens::VIBe2::OUTTUPLERASTER)
-        ExistingPorts = this->ExistingOutPorts;
-    if (p->getPortType() == vibens::VIBe2::INTUPLEVECTOR)
-        ExistingPorts = this->ExistingInPorts;
-    if (p->getPortType() == vibens::VIBe2::OUTTUPLEVECTOR)
-        ExistingPorts = this->ExistingOutPorts;
     if (p->getPortType() == vibens::VIBe2::INTUPLEDOUBLEDATA)
         ExistingPorts = this->ExistingInPorts;
     if (p->getPortType() == vibens::VIBe2::OUTTUPLEDOUBLEDATA)
@@ -197,93 +189,7 @@ GUIPort *  GroupNode::getGUIPort(vibens::Port * p) {
 }
 
 void GroupNode::removeTuplePort(int Type, QString s) {
-    /*   int counter = 0;
-    int itemID;
-    if (INPUTTUPLERASTER == Type) {
-        foreach(LinkNodeTuple *item  , InputTupleRaster) {
-            if (item->Port1->getPortName().compare(s) == 0) {
-                itemID = counter;
-                //InputRaster.remove(InputRaster.indexOf(item->Port1));
-                //OutputRaster.remove( OutputRaster.indexOf(item->Port2));
-                delete item->Port1;
-                delete item->Port2;
-            }
-            counter++;
-        }
-        InputTupleRaster.remove(itemID);
 
-    }
-    if (OUTPUTTUPLERASTER == Type) {
-        foreach(LinkNodeTuple *item  , OutputTupleRaster) {
-            if (item->Port1->getPortName().compare(s) == 0) {
-                itemID = counter;
-                //InputRaster.remove(InputRaster.indexOf(item->Port1));
-                //OutputRaster.remove( OutputRaster.indexOf(item->Port2));
-
-                delete item->Port1;
-                delete item->Port2;
-            }
-            counter++;
-        }
-        OutputTupleRaster.remove(itemID);
-
-    }
-    if (INPUTTUPLEVECTOR == Type) {
-        foreach(LinkNodeTuple *item  , InputTupleVector) {
-            if (item->Port1->getPortName().compare(s) == 0) {
-                itemID = counter;
-                //InputRaster.remove(InputVector.indexOf(item->Port1));
-                //OutputRaster.remove( OutputVector.indexOf(item->Port2));
-                delete item->Port1;
-                delete item->Port2;
-            }
-            counter++;
-        }
-        InputTupleVector.remove(itemID);
-
-    }
-    if (INPUTTUPLEDOUBLE== Type) {
-        foreach(LinkNodeTuple *item  , InputTupleDouble) {
-            if (item->Port1->getPortName().compare(s) == 0) {
-                itemID = counter;
-                //InputRaster.remove(InputDouble.indexOf(item->Port1));
-                //OutputRaster.remove( OutputDouble.indexOf(item->Port2));
-                delete item->Port1;
-                delete item->Port2;
-            }
-            counter++;
-        }
-        InputTupleDouble.remove(itemID);
-
-    }
-    if (OUTPUTTUPLEDOUBLE== Type) {
-        foreach(LinkNodeTuple *item  , OutputTupleDouble) {
-            if (item->Port1->getPortName().compare(s) == 0) {
-                itemID = counter;
-                //InputRaster.remove(InputDouble.indexOf(item->Port1));
-                //OutputRaster.remove( OutputDouble.indexOf(item->Port2));
-                delete item->Port1;
-                delete item->Port2;
-            }
-            counter++;
-        }
-        OutputTupleDouble.remove(itemID);
-
-    }
-    if (OUTPUTTUPLEVECTOR == Type) {
-        foreach(LinkNodeTuple *item  , OutputTupleVector) {
-            if (item->Port1->getPortName().compare(s) == 0) {
-                itemID = counter;
-                //InputRaster.remove(InputVector.indexOf(item->Port1));
-                //OutputRaster.remove( OutputVector.indexOf(item->Port2));
-                delete item->Port1;
-                delete item->Port2;
-            }
-            counter++;
-        }
-        OutputTupleVector.remove(itemID);
-
-    }*/
 }
 
 GroupNode::GroupNode( vibens::Module *module, vibens::Simulation * s, QVector<ModelNode * > * modelnodes, MainWindow * widget): ModelNode( module, s, modelnodes,widget)
@@ -329,23 +235,6 @@ GroupNode::GroupNode( vibens::Module *module, vibens::Simulation * s, QVector<Mo
     for (unordered_map<std::string, int>::const_iterator it = parameter.begin(); it != parameter.end(); ++it) {
         QString name = QString::fromStdString(it->first);
         int type = it->second;
-        if (type == vibens::VIBe2::RASTERDATA_IN) {
-            //module.inputRasterData.append(name);
-        }
-        if (type == vibens::VIBe2::RASTERDATA_OUT) {
-            //module.outputRasterData.append(name);
-        }
-
-        if (type == vibens::VIBe2::VECTORDATA_IN) {
-            VectorDataDescription vec;
-            vec.Name = name;
-            //module.inputVectorData.append(vec);
-        }
-        if (type == vibens::VIBe2::VECTORDATA_OUT) {
-            VectorDataDescription vec;
-            vec.Name = name;
-            //module.outputVectorData.append(vec);
-        }
 
         if (type == vibens::VIBe2::DOUBLEDATA_IN) {
             //module.inputDouble.append(name);

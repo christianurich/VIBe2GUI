@@ -45,14 +45,14 @@
 #include "cstdio"
 #include <QTreeWidget>
 #include "simulationmanagment.h"
-#include "pythonenv.h"
+//#include "pythonenv.h"
 #include <projectviewer.h>
 #include <modelnode.h>
 #include "datamanagment.h"
 #include <module.h>
 #include <boost/foreach.hpp>
 #include <simulation.h>
-#include <database.h>
+#include <dmdatabase.h>
 #include <datamanagement.h>
 #include <groupnode.h>
 #include <QWidget>
@@ -60,7 +60,6 @@
 #include <guiimageresultview.h>
 #include <vibe_log.h>
 #include <guilogsink.h>
-#include <gui3drasterdata.h>
 #include <guidataobserver.h>
 #include <plot.h>
 using namespace boost;
@@ -115,60 +114,9 @@ void MainWindow::registerPlotWindow(GUIResultObserver * ress, double x, double y
     connect(ress, SIGNAL(newDoubleDataForPlot(double, double)), p, SLOT(appendData(double, double)), Qt::BlockingQueuedConnection);
     p->appendData( x,y);
 }
-void MainWindow::register3DResultWindow(GUIResultObserver * ress, QVector<RasterData> r) {
-    GUI3DRasterData * w = new GUI3DRasterData(this);
 
 
-    //this->tabWidget_2->addTab(w, QString::fromStdString(this->simulation->getModuleWithUUID(ress->getUUID())->getName()));
-    this->tabWidget_2->addTab(w, QString::fromStdString("huhu"));
-    this->tabWidget_2->setCurrentIndex(this->tabWidget_2->count()-1);
-    // w->addRasterData(QString::fromStdString(ress->getUUID()), QString::fromStdString(ress->getfirstImage()));
-    w->addRasterData(r);
 
-    //Update Windows
-
-
-    connect(ress, SIGNAL(updateRasterData(QString, QString)), w, SLOT(addRasterData(QString, QString)), Qt::BlockingQueuedConnection);
-    qRegisterMetaType<RasterData>("RasterData");
-
-    connect(ress, SIGNAL(newRasterData( QVector<RasterData>)), w, SLOT(addRasterData( QVector<RasterData>)), Qt::BlockingQueuedConnection);
-
-}
-
-void MainWindow::register3DResultWindow(GUIResultObserver * ress, QVector<VectorData> r) {
-    GUI3DRasterData * w = new GUI3DRasterData(this);
-
-    this->tabWidget_2->addTab(w, QString::fromStdString("huhu"));
-    this->tabWidget_2->setCurrentIndex(this->tabWidget_2->count()-1);
-    w->addVectorData(r);
-
-    //Update Windows
-
-
-    connect(ress, SIGNAL(updateVectorData(QString, QString)), w, SLOT(addVectorData(QString, QString)), Qt::BlockingQueuedConnection);
-    qRegisterMetaType<VectorData>("VectorData");
-
-    connect(ress, SIGNAL(newVectorData( QVector<RasterData>)), w, SLOT(addVectorData( QVector<RasterData>)), Qt::BlockingQueuedConnection);
-
-}
-
-void MainWindow::create3DViewer() {
-
-    GUIDataObserver  * dbob = new GUIDataObserver();
-    vibens::DataManagement::getInstance().getDataBase()->registerDataObserver(dbob);
-
-
-    Viewer * v = new Viewer(0);
-    //QVector<RasterData> vec;
-    qRegisterMetaType<QVector<RasterData > >("QVector<RasterData >");
-    connect(dbob, SIGNAL(newRasterData(QVector<RasterData >)), v, SLOT(addRasterData(QVector<RasterData >)));
-
-    qRegisterMetaType<QVector<VectorData > >("QVector<VectorData >");
-    connect(dbob, SIGNAL(newVectorData(QVector<VectorData >)), v, SLOT(addVectorData(QVector<VectorData >)));
-
-    v->setFocus();
-    v->show();
-}
 void MainWindow::ReloadSimulation() {
     this->simulation->reloadModules();
     this->
@@ -176,7 +124,7 @@ void MainWindow::ReloadSimulation() {
 }
 
 void MainWindow::startEditor() {
-    vibens::PythonEnv::getInstance()->startEditra();
+    //vibens::PythonEnv::getInstance()->startEditra();
 }
 
 MainWindow::MainWindow(QWidget * parent)
@@ -190,7 +138,7 @@ MainWindow::MainWindow(QWidget * parent)
     running =  false;
     setupUi(this);
     vibens::DataManagement::init();
-    this->database = new  vibens::DataBase();
+    this->database = new  DMDatabase();
     vibens::DataManagement::getInstance().registerDataBase(this->database);
 
     //this->graphicsView->setViewport(new QGLWidget());
@@ -200,6 +148,7 @@ MainWindow::MainWindow(QWidget * parent)
 
     this->scene = new ProjectViewer();
     this->scene->setSimulation(this->simulation);
+    this->simulation->registerNativeModules("/home/christian/programms/VIBe2Core/build/debug/libdmtestmodule.so");
 
     this->scene->setResultViewer(this);
 
