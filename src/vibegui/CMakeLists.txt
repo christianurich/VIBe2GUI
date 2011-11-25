@@ -2,11 +2,23 @@ find_package(OpenGL)
 
 
 include_directories(${VIBE2CORE_INCLUDE_DIRS})
-include_directories(${CMAKE_CURRENT_BINARY_DIR}../vibegui)
+include_directories(${CMAKE_CURRENT_BINARY_DIR}../vibegui )
+
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_BINARY_DIR})
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
+INCLUDE_DIRECTORIES(/home/christian/programms/VIBe2Core/src/python-swig)
+INCLUDE_DIRECTORIES(/home/christian/programms/VIBe2Core/build/debug/)
+
 include_directories(.)
 set(MOC_FILES  guilogsink.h  mainwindow.h plot.h preferences.h guimodelnode.h modelnode.h guilink.h StdRedirector.h application.h modelnodebutton.h simulationmanagment.h groupnode.h guiresultobserver.h guiimageresultview.h guidataobserver.h)
 file (GLOB CPP_GUI_FILES *.cpp)
 file (GLOB UI_FILES *.ui)
+
+SET_SOURCE_FILES_PROPERTIES(/home/christian/programms/VIBe2Core/build/debug/pydynamiteWRAP.cpp PROPERTIES GENERATED 1)
+SET(CPP_GUI_FILES ${CPP_GUI_FILES} /home/christian/programms/VIBe2Core/src/python-swig/pythonenv.cpp /home/christian/programms/VIBe2Core/build/debug/pydynamiteWRAP.cpp)
+
+
+
 #set (MOC_FILES datamanagment.h)
 QT4_WRAP_UI(CPP_GUI_FILES ${UI_FILES})
 QT4_WRAP_CPP(CPP_GUI_FILES ${MOC_FILES})

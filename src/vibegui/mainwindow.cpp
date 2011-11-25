@@ -62,6 +62,7 @@
 #include <guilogsink.h>
 #include <guidataobserver.h>
 #include <plot.h>
+#include <pythonenv.h>
 using namespace boost;
 void outcallback( const char* ptr, std::streamsize count, void* pTextBox )
 {
@@ -140,6 +141,8 @@ MainWindow::MainWindow(QWidget * parent)
     vibens::DataManagement::init();
     this->database = new  DMDatabase();
     vibens::DataManagement::getInstance().registerDataBase(this->database);
+    vibens::PythonEnv *env = vibens::PythonEnv::getInstance();
+    env->addPythonPath("/home/christian/programms/VIBe2Core/build/debug");
 
     //this->graphicsView->setViewport(new QGLWidget());
 
@@ -149,7 +152,7 @@ MainWindow::MainWindow(QWidget * parent)
     this->scene = new ProjectViewer();
     this->scene->setSimulation(this->simulation);
     this->simulation->registerNativeModules("/home/christian/programms/VIBe2Core/build/debug/libdmtestmodule.so");
-
+    this->simulation->registerPythonModules("/home/christian/programms/VIBe2Core/scripts");
     this->scene->setResultViewer(this);
 
     this->mnodes = new QVector<ModelNode*>();
