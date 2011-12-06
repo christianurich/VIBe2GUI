@@ -32,7 +32,7 @@
 #include <QSplashScreen>
 #include <QThreadPool>
 int main(int argc, char *argv[]) {
-QThreadPool::globalInstance()->setMaxThreadCount(1);
+
     QApplication app(argc, argv);
     Q_INIT_RESOURCE(icons);
     //Q_INIT_RESOURCE(splash);

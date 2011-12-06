@@ -51,9 +51,9 @@ private:
 public:
     GUIResultObserver();
     void addResultImage(std::string UUID, std::string filename);
-    void addRasterDataToViewer( QVector<RasterData>);//std::string UUID, std::string name);
+    //void addRasterDataToViewer( QVector<RasterData>);//std::string UUID, std::string name);
     void addDoubleDataToPlot(std::string UUID, double x, double y);
-    void addVectorDataToViewer(QVector<VectorData>);
+    //void addVectorDataToViewer(QVector<VectorData>);
 
     void setResultWidget(MainWindow * widget);
     std::string getUUID(){return UUID;}
@@ -62,12 +62,12 @@ public:
 signals:
     void registerWidet(GUIResultObserver*);
     void registerPlotWidget(GUIResultObserver*, double, double);
-    void register3DWidget(GUIResultObserver*,  QVector<RasterData>);
-    void register3DWidget(GUIResultObserver*,  QVector<VectorData>);
+    //void register3DWidget(GUIResultObserver*,  QVector<RasterData>);
+    //void register3DWidget(GUIResultObserver*,  QVector<VectorData>);
     void updateImage(QString);
     void updateRasterData(QString, QString);
-    void newRasterData( QVector<RasterData>);
-    void newVectorData( QVector<VectorData>);
+    //void newRasterData( QVector<RasterData>);
+    //void newVectorData( QVector<VectorData>);
     void newDoubleDataForPlot( double x, double y);
 };
 

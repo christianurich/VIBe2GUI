@@ -128,13 +128,22 @@ void ModelNode::resetModel() {
 }
 
 void ModelNode::addPort(vibens::Port * p) {
+    if (p->getPortType() < vibens::VIBe2::OUTPORTS ) {
     foreach (QString pname, ExistingInPorts) {
         if (pname.compare(QString::fromStdString(p->getLinkedDataName())) == 0) {
             return;
         }
+        ExistingInPorts << QString::fromStdString(p->getLinkedDataName());
+    }
+    } else {
+        foreach (QString pname, ExistingOutPorts) {
+            if (pname.compare(QString::fromStdString(p->getLinkedDataName())) == 0) {
+                return;
+            }
+        }
+        ExistingOutPorts << QString::fromStdString(p->getLinkedDataName());
     }
 
-    ExistingInPorts << QString::fromStdString(p->getLinkedDataName());
     GUIPort * gui_p = new  GUIPort(this, p);
     ports.append(gui_p);
     if  (p->getPortType() < vibens::VIBe2::OUTPORTS) {

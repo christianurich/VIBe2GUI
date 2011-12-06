@@ -190,13 +190,8 @@ GUIModelNode::GUIModelNode(vibens::Module * m, ModelNode *mn, QWidget* parent) :
 
 
         }
-        if (ID == vibens::VIBe2::USER_DEFINED_RASTERDATA_IN ||
-                ID == vibens::VIBe2::USER_DEFINED_RASTER_TUPLE_IN ||
-                ID == vibens::VIBe2::USER_DEFINED_RASTER_TUPLE_OUT ||
-                ID == vibens::VIBe2::USER_DEFINED_VECTORDATA_IN ||
+        if (
                 ID == vibens::VIBe2::USER_DEFINED_DOUBLEDATA_IN ||
-                ID == vibens::VIBe2::USER_DEFINED_VECTORDATA_TUPLE_IN ||
-                ID == vibens::VIBe2::USER_DEFINED_VECTORDATA_TUPLE_OUT  ||
                 ID == vibens::VIBe2::USER_DEFINED_DOUBLEDATA_TUPLE_OUT ||
                 ID == vibens::VIBe2::USER_DEFINED_DOUBLEDATA_TUPLE_IN) {
 
@@ -211,20 +206,9 @@ GUIModelNode::GUIModelNode(vibens::Module * m, ModelNode *mn, QWidget* parent) :
             QPushButton * pb = new QPushButton;
             pb->setText("+");
             QString s1;
-            if(ID == vibens::VIBe2::USER_DEFINED_RASTERDATA_IN)
-                s1= "InputRaster|" + s;
+
             if(ID == vibens::VIBe2::USER_DEFINED_DOUBLEDATA_IN)
                 s1= "InputDouble|" + s;
-            if(ID == vibens::VIBe2::USER_DEFINED_RASTER_TUPLE_IN)
-                s1= "InputTupleRaster|" + s;
-            if(ID == vibens::VIBe2::USER_DEFINED_RASTER_TUPLE_OUT)
-                s1= "OutputTupleRaster|" + s;
-            if(ID == vibens::VIBe2::USER_DEFINED_VECTORDATA_IN)
-                s1= "InputVector|" + s;
-            if(ID == vibens::VIBe2::USER_DEFINED_VECTORDATA_TUPLE_IN)
-                s1= "InputTupleVector|" + s;
-            if(ID == vibens::VIBe2::USER_DEFINED_VECTORDATA_TUPLE_OUT)
-                s1= "OutputTupleVector|" + s;
             if(ID == vibens::VIBe2::USER_DEFINED_DOUBLEDATA_TUPLE_IN)
                 s1= "InputTupleDouble|" + s;
             if(ID == vibens::VIBe2::USER_DEFINED_DOUBLEDATA_TUPLE_OUT)
@@ -234,22 +218,6 @@ GUIModelNode::GUIModelNode(vibens::Module * m, ModelNode *mn, QWidget* parent) :
             connect(pb, SIGNAL(clicked()), this, SLOT(addUserDefinedItem()));
             std::string stds = s.toStdString();
             QStringList ls;
-            if (ID == vibens::VIBe2::USER_DEFINED_RASTERDATA_IN ){
-                std::map<std::string, RasterData*> map = m->getParameter<std::map<std::string, RasterData*> >(stds);
-
-                for (std::map<std::string, RasterData*>::const_iterator it = map.begin(); it != map.end(); ++it ) {
-                    std::string name=it->first;
-                    ls.append(QString::fromStdString(name));
-                }
-            }
-            if (ID == vibens::VIBe2::USER_DEFINED_VECTORDATA_IN ){
-                std::map<std::string, VectorData*> map = m->getParameter<std::map<std::string, VectorData*> >(stds);
-
-                for (std::map<std::string, VectorData*>::const_iterator it = map.begin(); it != map.end(); ++it ) {
-                    std::string name=it->first;
-                    ls.append(QString::fromStdString(name));
-                }
-            }
             if (ID == vibens::VIBe2::USER_DEFINED_DOUBLEDATA_IN ){
                 std::map<std::string, double> map = m->getParameter<std::map<std::string, double> >(stds);
 
@@ -259,10 +227,7 @@ GUIModelNode::GUIModelNode(vibens::Module * m, ModelNode *mn, QWidget* parent) :
                 }
             }
 
-            if (ID == vibens::VIBe2::USER_DEFINED_RASTER_TUPLE_IN ||
-                    ID==vibens::VIBe2::USER_DEFINED_RASTER_TUPLE_OUT ||
-                    ID == vibens::VIBe2::USER_DEFINED_VECTORDATA_TUPLE_IN ||
-                    ID==vibens::VIBe2::USER_DEFINED_VECTORDATA_TUPLE_OUT ||
+            if (
                     ID == vibens::VIBe2::USER_DEFINED_DOUBLEDATA_TUPLE_OUT ||
                     ID == vibens::VIBe2::USER_DEFINED_DOUBLEDATA_TUPLE_IN
                     ){
@@ -319,9 +284,8 @@ void GUIModelNode::help() {
 
     QWidget * helpWindow = new QWidget(this->parentWidget());
     QTextEdit * text = new QTextEdit();
-    text->setText(QString::fromStdString(this->module->generateHelp()));
+    //text->setText(QString::fromStdString(this->module->generateHelp()));
     //QWebView * help = new QWebView;
-    //QUrl url(QString::fromStdString("http://c815:iut0703@138.232.95.31/"+this->modelNode->getUrlToHelpFile()));
 
     //help->setUrl(url);
     //help->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
@@ -358,10 +322,6 @@ void GUIModelNode::addTuplePort() {
             GroupNode * gn = (GroupNode * )this->module;
 
             vibens::PortTuple * pt;
-            if (TypeInfo.compare("InputTupleRaster") == 0)
-                vibens::PortTuple * pt = g->addTuplePort(text.toStdString(), vibens::VIBe2::INTUPLERASTER);
-            if (TypeInfo.compare("InputTupleVector") == 0)
-                vibens::PortTuple * pt = g->addTuplePort(text.toStdString(), vibens::VIBe2::INTUPLEVECTOR);
             if (TypeInfo.compare("InputTupleDouble") == 0)
                 vibens::PortTuple * pt = g->addTuplePort(text.toStdString(), vibens::VIBe2::INTUPLEDOUBLEDATA);
             gn->addTuplePort(pt);
@@ -561,69 +521,10 @@ void GUIModelNode::accept() {
         }
 
 
-        /*int type = this->moduleDescription->parameter.value(s);
-        if (type == QVariant::Int || type == QVariant::Double|| type == QVariant::String || type == QVariant::UserType+6) {
-            QLineEdit * le = ( QLineEdit * ) this->elements.value(s);
-            QVariant val;
 
-            if ( type == QVariant::Int )
-                val = QVariant(le->text().toInt());
-            if ( type == QVariant::Double )
-                val = QVariant(le->text().toDouble());
-            if ( type == QVariant::String || type == QVariant::UserType+6)
-                val = QVariant(le->text());
-
-            //this->moduleDescription->paramterValues.insert(s, val);
-        }
-        if (type == QVariant::Bool) {
-            QCheckBox * le = ( QCheckBox * ) this->elements.value(s);
-            QVariant val (false);
-            if ( le->checkState() == Qt::Checked) {
-                val = true;
-            }
-
-
-            this->moduleDescription->paramterValues.insert(s, val);
-        }
-
-        if (type == QVariant::UserType+5) {
-            QComboBox * le = ( QComboBox * ) this->elements.value(s);
-            QVariant v = moduleDescription->paramterValues.value(s);
-            QMap<QString, QVariant> m = v.value< QMap<QString, QVariant> >();
-            QString selected = le->currentText();
-            foreach (QString s, m.keys()) {
-                if (m[s] == true) {
-                    m[s] = false;
-                }
-
-                if (selected.compare(s) == 0) {
-                    m[s] = true;
-                }
-            }
-
-
-
-
-            this->moduleDescription->paramterValues.insert(s, m);
-
-        }*/
 
     }
-    /*foreach(QString s, this->moduleDescription->parameter.keys()) {
-        int type = this->moduleDescription->parameter.value(s);
-        if (type == QVariant::UserType+4) {
-            QVariant va =  this->moduleDescription->paramterValues.value(s);
-            QMap<QString, QVariant> ma  = va.value<QMap<QString, QVariant> >();
-            foreach (QString s1, ma.keys()) {
-                QLineEdit * le = ( QLineEdit * ) this->elements.value(s1);
 
-                ma.insert(s1, le->text());
-                std::cout  << "text " << le->text().toStdString() << std::endl;
-            }
-
-            this->moduleDescription->paramterValues.insert(s, ma);
-        }
-    }*/
     delete(this);
 }
 void GUIModelNode::reject() {

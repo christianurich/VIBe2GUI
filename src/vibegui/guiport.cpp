@@ -66,9 +66,8 @@ GUIPort::GUIPort(ModelNode *modelNode, vibens::Port *p) : QGraphicsItem(modelNod
     this->modelNode = modelNode;
     this->PortType = p->getPortType();
     this->simpleTextItem = new QGraphicsSimpleTextItem (QString::fromStdString(p->getLinkedDataName()));
-    if (p->getPortType() == vibens::VIBe2::INRASTER || p->getPortType() == vibens::VIBe2::OUTRASTER)
-        color = COLOR_RASTERPORT;
-    if (p->getPortType() == vibens::VIBe2::INVECTOR || p->getPortType() == vibens::VIBe2::OUTVECTOR)
+
+    if (p->getPortType() == vibens::VIBe2::INSYSTEM || p->getPortType() == vibens::VIBe2::OUTSYSTEM)
         color = COLOR_VECTORPORT;
     if (p->getPortType() == vibens::VIBe2::INDOUBLEDATA || p->getPortType() == vibens::VIBe2::OUTDOUBLEDATA)
         color = COLOR_DOUBLEPORT
@@ -130,9 +129,8 @@ QRectF GUIPort::boundingRect() const {
 
 void GUIPort::hoverEnterEvent ( QGraphicsSceneHoverEvent * event ) {
     this->isHover = true;
-    if (this->p->getPortType() == vibens::VIBe2::INRASTER || this->p->getPortType() == vibens::VIBe2::OUTRASTER)
-        color = COLOR_RASTERPORT;
-    if (this->p->getPortType() == vibens::VIBe2::INVECTOR|| this->p->getPortType() == vibens::VIBe2::OUTVECTOR)
+
+    if (this->p->getPortType() == vibens::VIBe2::INSYSTEM|| this->p->getPortType() == vibens::VIBe2::OUTSYSTEM)
         color = COLOR_VECTORPORT;
     if (p->getPortType() == vibens::VIBe2::INDOUBLEDATA || p->getPortType() == vibens::VIBe2::OUTDOUBLEDATA)
         color = COLOR_DOUBLEPORT
@@ -148,9 +146,8 @@ void GUIPort::hoverEnterEvent ( QGraphicsSceneHoverEvent * event ) {
 void GUIPort::hoverLeaveEvent ( QGraphicsSceneHoverEvent * event ) {
     this->isHover = false;
     if (!LinkMode) {
-        if (p->getPortType()  == vibens::VIBe2::INRASTER || p->getPortType()  == vibens::VIBe2::OUTRASTER)
-            color = COLOR_RASTERPORT;
-        if (p->getPortType()  == vibens::VIBe2::INVECTOR || p->getPortType()  == vibens::VIBe2::OUTVECTOR)
+
+        if (p->getPortType()  == vibens::VIBe2::INSYSTEM || p->getPortType()  == vibens::VIBe2::OUTSYSTEM)
             color = COLOR_VECTORPORT;
         if (p->getPortType() == vibens::VIBe2::INDOUBLEDATA || p->getPortType() == vibens::VIBe2::OUTDOUBLEDATA)
             color = COLOR_DOUBLEPORT
@@ -179,14 +176,8 @@ void GUIPort::mouseMoveEvent ( QGraphicsSceneMouseEvent * event )  {
     foreach (QGraphicsItem  * item, items) {
         if ( this->type() == item->type() ) {
             GUIPort * link  = (GUIPort *) item;
-            if (getPortType() == vibens::VIBe2::OUTRASTER &&  link->getPortType() == vibens::VIBe2::INRASTER ) {
-                link->setHover(true);
-                link->prepareGeometryChange();
-                link->update();
-                this->hoverElement = link;
-                setHover = true;
-            }
-            if (getPortType() == vibens::VIBe2::OUTVECTOR &&  link->getPortType() == vibens::VIBe2::INVECTOR ) {
+
+            if (getPortType() == vibens::VIBe2::OUTSYSTEM &&  link->getPortType() == vibens::VIBe2::INSYSTEM ) {
                 link->setHover(true);
                 link->prepareGeometryChange();
                 link->update();
@@ -213,9 +204,8 @@ void GUIPort::mouseMoveEvent ( QGraphicsSceneMouseEvent * event )  {
 
 
 void GUIPort::mousePressEvent ( QGraphicsSceneMouseEvent * event )  {
-    if (getPortType() == vibens::VIBe2::INRASTER || getPortType() == vibens::VIBe2::OUTRASTER )
-        color = COLOR_RASTERPORT;
-    if (getPortType() == vibens::VIBe2::INVECTOR || getPortType() == vibens::VIBe2::OUTVECTOR )
+
+    if (getPortType() == vibens::VIBe2::INSYSTEM || getPortType() == vibens::VIBe2::OUTSYSTEM )
         color = COLOR_VECTORPORT;
     if (p->getPortType() == vibens::VIBe2::INDOUBLEDATA || p->getPortType() == vibens::VIBe2::OUTDOUBLEDATA)
         color = COLOR_DOUBLEPORT
@@ -237,9 +227,8 @@ void GUIPort::mouseReleaseEvent ( QGraphicsSceneMouseEvent * event ) {
     std::cout << "mouseReleaseEvent " << std::endl;
     if (getPortType() < vibens::VIBe2::OUTPORTS) {
         LinkMode = false;
-        if (getPortType()  == vibens::VIBe2::INRASTER)
-            color = COLOR_RASTERPORT;
-        if (getPortType()  == vibens::VIBe2::INVECTOR)
+
+        if (getPortType()  == vibens::VIBe2::INSYSTEM)
             color = COLOR_VECTORPORT;
 
         this->update(this->boundingRect());
@@ -248,16 +237,8 @@ void GUIPort::mouseReleaseEvent ( QGraphicsSceneMouseEvent * event ) {
         foreach (QGraphicsItem  * item, items) {
             if ( this->type() == item->type() ) {
                 GUIPort * endLink  = (GUIPort *) item;
-                if (getPortType() == vibens::VIBe2::OUTRASTER &&  endLink->getPortType() == vibens::VIBe2::INRASTER ) {
-                    this->tmp_link->setInPort(endLink);
-                    //this->links.append(tmp_link);
-                    //Create Link
-                    tmp_link->setVIBeLink(this->modelNode->getSimulation()->addLink(tmp_link->getOutPort()->getVIBePort(), tmp_link->getInPort()->getVIBePort()));
-                    tmp_link->setSimulation(this->modelNode->getSimulation());
-                    newLink = true;
-                    tmp_link = 0;
-                }
-                if (getPortType() == vibens::VIBe2::OUTVECTOR &&  endLink->getPortType() == vibens::VIBe2::INVECTOR ) {
+
+                if (getPortType() == vibens::VIBe2::OUTSYSTEM &&  endLink->getPortType() == vibens::VIBe2::INSYSTEM ) {
                     this->tmp_link->setInPort(endLink);
                     //this->links.append(tmp_link);
                     //Create Link

@@ -52,9 +52,10 @@ class SimulationManagment;
 class DataManagment;
 class GroupNode;
 class GuiLogSink;
+class DMDatabase;
 
 namespace vibens {
-    class DataBase;
+
     class Simulation;
 }
 
@@ -71,7 +72,7 @@ public:
     GuiLogSink *log_updater;
 private:
     vibens::Simulation * simulation;
-    vibens::DataBase * database;
+    DMDatabase * database;
     DataManagment * data;
     SimulationManagment * simmanagment;
 
@@ -86,7 +87,6 @@ private:
     QTreeWidgetItem * rootItemModelTree;
     vibens::ModuleRegistry registry;
     void writeGUIInformation(QString FileName);
-    void  create3DViewer();
     QwtPlotMarker * points;
 
 
@@ -102,8 +102,6 @@ public slots:
     void importSimulation(QString fileName = "", QPointF = QPointF(0,0));
     void editGroup();
     void registerResultWindow(GUIResultObserver *);
-    void register3DResultWindow(GUIResultObserver *,  QVector<RasterData>);
-    void register3DResultWindow(GUIResultObserver *,  QVector<VectorData>);
     void registerPlotWindow(GUIResultObserver *, double, double);
     void updateRasterData(QString,  QString);
     void updateResultImage(QString);
