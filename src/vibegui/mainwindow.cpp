@@ -125,7 +125,7 @@ void MainWindow::ReloadSimulation() {
 }
 
 void MainWindow::startEditor() {
-    //vibens::PythonEnv::getInstance()->startEditra();
+    vibens::PythonEnv::getInstance()->startEditra();
 }
 
 MainWindow::MainWindow(QWidget * parent)
@@ -143,6 +143,7 @@ MainWindow::MainWindow(QWidget * parent)
     vibens::DataManagement::getInstance().registerDataBase(this->database);
     vibens::PythonEnv *env = vibens::PythonEnv::getInstance();
     env->addPythonPath("/home/christian/programms/VIBe2Core/build/debug");
+	env->addOverWriteStdCout();
 
     //this->graphicsView->setViewport(new QGLWidget());
 
