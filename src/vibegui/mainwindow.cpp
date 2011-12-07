@@ -151,8 +151,8 @@ MainWindow::MainWindow(QWidget * parent)
 
     this->scene = new ProjectViewer();
     this->scene->setSimulation(this->simulation);
-    this->simulation->registerNativeModules("/home/christian/programms/VIBe2Core/build/debug/libdmtestmodule.so");
-    this->simulation->registerPythonModules("/home/christian/programms/VIBe2Core/scripts");
+    this->simulation->registerNativeModules("/home/c8451045/Documents/VIBe2Core/build/debug/libdmtestmodule.so");
+    this->simulation->registerPythonModules("/home/c8451045/Documents/VIBe2Core/scripts");
     this->scene->setResultViewer(this);
 
     this->mnodes = new QVector<ModelNode*>();

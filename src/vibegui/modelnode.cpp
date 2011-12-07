@@ -47,6 +47,9 @@
 #include <QInputDialog>
 #include <groupnode.h>
 
+#include <DMcomponent.h>
+#include <DMsystem.h>
+
 using namespace boost;
 std::string ModelNode::getParameterAsString(std::string name) {
 
@@ -75,40 +78,40 @@ void ModelNode::updatePorts () {
     }
 
     for (int i = this->ports.size()-1; i > -1; i--) {
-          GUIPort * gp = this->ports[i];
-          if (gp->getVIBePort()->isPortTuple())
-              continue;
-          if (gp->getPortType()  > vibens::VIBe2::OUTPORTS ) {
-              bool  portExists = false;
+        GUIPort * gp = this->ports[i];
+        if (gp->getVIBePort()->isPortTuple())
+            continue;
+        if (gp->getPortType()  > vibens::VIBe2::OUTPORTS ) {
+            bool  portExists = false;
 
-              BOOST_FOREACH (vibens::Port * p, this->VIBeModule->getInPorts()){
-                  std::string portname1 = p->getLinkedDataName();
-                  std::string portname2 = gp->getPortName().toStdString();
-                  if (portname1.compare(portname2) == 0) {
-                      portExists = true;
-                  }
-              }
-              if (!portExists) {
-                  ExistingInPorts.removeAt(ExistingInPorts.indexOf(gp->getPortName()));
-                  this->ports.remove(i);
-                  delete gp;
-              }
-          }
-          if (gp->getPortType()  < vibens::VIBe2::OUTPORTS ) {
-              bool  portExists = false;
+            BOOST_FOREACH (vibens::Port * p, this->VIBeModule->getInPorts()){
+                std::string portname1 = p->getLinkedDataName();
+                std::string portname2 = gp->getPortName().toStdString();
+                if (portname1.compare(portname2) == 0) {
+                    portExists = true;
+                }
+            }
+            if (!portExists) {
+                ExistingInPorts.removeAt(ExistingInPorts.indexOf(gp->getPortName()));
+                this->ports.remove(i);
+                delete gp;
+            }
+        }
+        if (gp->getPortType()  < vibens::VIBe2::OUTPORTS ) {
+            bool  portExists = false;
 
-              BOOST_FOREACH (vibens::Port * p, this->VIBeModule->getOutPorts()){
-                  if (p->getLinkedDataName().compare(gp->getPortName().toStdString()) == 0) {
-                      portExists = true;
-                  }
-              }
-              if (!portExists) {
-                  ExistingOutPorts.removeAt(ExistingOutPorts.indexOf(gp->getPortName()));
-                  this->ports.remove(i);
-                  delete gp;
-              }
-          }
-      }
+            BOOST_FOREACH (vibens::Port * p, this->VIBeModule->getOutPorts()){
+                if (p->getLinkedDataName().compare(gp->getPortName().toStdString()) == 0) {
+                    portExists = true;
+                }
+            }
+            if (!portExists) {
+                ExistingOutPorts.removeAt(ExistingOutPorts.indexOf(gp->getPortName()));
+                this->ports.remove(i);
+                delete gp;
+            }
+        }
+    }
 
 
 
@@ -129,12 +132,12 @@ void ModelNode::resetModel() {
 
 void ModelNode::addPort(vibens::Port * p) {
     if (p->getPortType() < vibens::VIBe2::OUTPORTS ) {
-    foreach (QString pname, ExistingInPorts) {
-        if (pname.compare(QString::fromStdString(p->getLinkedDataName())) == 0) {
-            return;
+        foreach (QString pname, ExistingInPorts) {
+            if (pname.compare(QString::fromStdString(p->getLinkedDataName())) == 0) {
+                return;
+            }
+            ExistingInPorts << QString::fromStdString(p->getLinkedDataName());
         }
-        ExistingInPorts << QString::fromStdString(p->getLinkedDataName());
-    }
     } else {
         foreach (QString pname, ExistingOutPorts) {
             if (pname.compare(QString::fromStdString(p->getLinkedDataName())) == 0) {
@@ -312,7 +315,8 @@ void ModelNode::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
     QMenu menu;
     QAction  * a_edit = menu.addAction("edit");
     QAction * a_rename = menu.addAction("rename");
-    QAction  * a_delete = menu.addAction("delete");
+    QAction * a_delete = menu.addAction("delete");
+    QAction * a_showData = menu.addAction("showData");
     QMenu * GroupMenu =     menu.addMenu("Groups");
 
     GroupMenu->setTitle("Group");
@@ -339,7 +343,7 @@ void ModelNode::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
     connect( a_delete, SIGNAL( activated() ), this, SLOT( deleteModelNode() ), Qt::DirectConnection );
     connect( a_edit, SIGNAL( activated() ), this, SLOT( editModelNode() ), Qt::DirectConnection );
     connect( a_rename, SIGNAL(activated() ), this, SLOT( renameModelNode() ), Qt::DirectConnection);
-
+    connect( a_showData, SIGNAL(activated() ), this, SLOT( printData() ), Qt::DirectConnection);
     menu.exec(event->screenPos());
 
 }
@@ -399,4 +403,22 @@ void ModelNode::addGroup() {
     this->parentGroup->recalculateLandH();
     this->parentGroup->setGroupZValue();
     this->parentGroup->update();
+}
+
+void ModelNode::printData() {
+    vibens::Logger(vibens::Debug) << this->getVIBeModel()->getName();
+
+    foreach (vibens::Port * p, this->getVIBeModel()->getOutPorts())
+    {
+        std::string dataname = p->getLinkedDataName();
+        vibens::Logger(vibens::Debug) << dataname;
+        DM::System * sys = this->getVIBeModel()->getData(dataname);
+
+        foreach (std::string name, sys->getNamesOfViews()) {
+            vibens::Logger(vibens::Debug) << name;
+        }
+
+
+    }
+
 }
