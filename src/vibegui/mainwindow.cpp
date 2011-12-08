@@ -142,7 +142,7 @@ MainWindow::MainWindow(QWidget * parent)
     this->database = new  DMDatabase();
     vibens::DataManagement::getInstance().registerDataBase(this->database);
     vibens::PythonEnv *env = vibens::PythonEnv::getInstance();
-    env->addPythonPath("/home/christian/programms/VIBe2Core/build/debug");
+    env->addPythonPath("/home/c8451045/Documents/VIBe2Core/build/debug");
 	env->addOverWriteStdCout();
 
     //this->graphicsView->setViewport(new QGLWidget());
