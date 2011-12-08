@@ -82,7 +82,10 @@ bool GUIPort::isLinked() {
 }
 
 void GUIPort::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-
+    if (this->p->isFullyLinked())
+        color = Qt::green;
+    if (!this->p->isFullyLinked())
+        color = Qt::red;
     painter->setBrush(color);
 
     if(isHover){
@@ -249,7 +252,7 @@ void GUIPort::mouseReleaseEvent ( QGraphicsSceneMouseEvent * event ) {
 
                     //Run Simulation
 
-                    this->modelNode->getSimulation()->run(true);
+                    this->modelNode->getSimulation()->run(true, false);
 
 
 

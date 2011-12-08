@@ -413,7 +413,9 @@ void ModelNode::printData() {
         std::string dataname = p->getLinkedDataName();
         vibens::Logger(vibens::Debug) << dataname;
         DM::System * sys = this->getVIBeModel()->getData(dataname);
-
+        if (sys == 0) {
+            continue;
+        }
         foreach (std::string name, sys->getNamesOfViews()) {
             vibens::Logger(vibens::Debug) << name;
             DM::View view = sys->getViewDefinition(name);
