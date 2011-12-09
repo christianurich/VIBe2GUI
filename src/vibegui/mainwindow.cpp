@@ -142,8 +142,6 @@ MainWindow::MainWindow(QWidget * parent)
     this->database = new  DMDatabase();
     vibens::DataManagement::getInstance().registerDataBase(this->database);
     vibens::PythonEnv *env = vibens::PythonEnv::getInstance();
-    env->addPythonPath("/home/christian/programms/VIBe2Core/build/debug");
-	env->addOverWriteStdCout();
 
     //this->graphicsView->setViewport(new QGLWidget());
 
@@ -152,8 +150,6 @@ MainWindow::MainWindow(QWidget * parent)
 
     this->scene = new ProjectViewer();
     this->scene->setSimulation(this->simulation);
-    this->simulation->registerNativeModules("/home/c8451045/Documents/VIBe2Core/build/debug/libdmtestmodule.so");
-    this->simulation->registerPythonModules("/home/c8451045/Documents/VIBe2Core/scripts");
     this->scene->setResultViewer(this);
 
     this->mnodes = new QVector<ModelNode*>();
