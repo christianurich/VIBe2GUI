@@ -82,7 +82,10 @@ bool GUIPort::isLinked() {
 }
 
 void GUIPort::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-
+    if (this->p->isFullyLinked())
+        color = Qt::green;
+    if (!this->p->isFullyLinked())
+        color = Qt::red;
     painter->setBrush(color);
 
     if(isHover){
@@ -246,6 +249,13 @@ void GUIPort::mouseReleaseEvent ( QGraphicsSceneMouseEvent * event ) {
                     tmp_link->setSimulation(this->modelNode->getSimulation());
                     newLink = true;
                     tmp_link = 0;
+
+                    //Run Simulation
+
+                    this->modelNode->getSimulation()->run(true, false);
+
+
+
                 }
                 if (getPortType() == vibens::VIBe2::OUTDOUBLEDATA &&  endLink->getPortType() == vibens::VIBe2::INDOUBLEDATA ) {
                     this->tmp_link->setInPort(endLink);

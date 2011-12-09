@@ -413,9 +413,18 @@ void ModelNode::printData() {
         std::string dataname = p->getLinkedDataName();
         vibens::Logger(vibens::Debug) << dataname;
         DM::System * sys = this->getVIBeModel()->getData(dataname);
-
+        if (sys == 0) {
+            continue;
+        }
         foreach (std::string name, sys->getNamesOfViews()) {
             vibens::Logger(vibens::Debug) << name;
+            DM::View view = sys->getViewDefinition(name);
+            DM::Component * c = sys->getComponent(view.getIdOfDummyComponent());
+
+             std::map<std::string,DM::Attribute*> attributes = c->getAllAttributes();
+             for (std::map<std::string,DM::Attribute*>::const_iterator it  = attributes.begin(); it != attributes.end(); ++it) {
+                 vibens::Logger(vibens::Debug) << it->first;
+             }
         }
 
 
