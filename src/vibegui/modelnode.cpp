@@ -117,7 +117,14 @@ void ModelNode::updatePorts () {
 
 }
 void ModelNode::resetModel() {
+    vibens::Module *oldmodule = this->VIBeModule;
     this->VIBeModule = this->simulation->resetModule(this->VIBeModule->getUuid());
+
+    if(this->VIBeModule==oldmodule)
+    {
+        vibens::Logger(vibens::Error) << "The code-base has changed for module \"" << this->VIBeModule->getName() << "\". There is an error in the new code-base";
+    }
+
     foreach(GUIPort * p, this->ports) {
         vibens::Port * po = 0;
         if ((this->VIBeModule->getInPort( p->getPortName().toStdString()) == 0)) {
