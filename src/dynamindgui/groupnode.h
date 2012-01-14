@@ -29,7 +29,7 @@
 #include <modelnode.h>
 #include <moduledescription.h>
 #include "compilersettings.h"
-namespace vibens {
+namespace DM {
     class Module;
     class Simulation;
     class PortTuple;
@@ -62,10 +62,10 @@ protected:
 public:
     GroupNode();
     virtual ~GroupNode();
-    void addTuplePort(vibens::PortTuple * p);
+    void addTuplePort(DM::PortTuple * p);
     void removeTuplePort(int Type, QString s);
-    GroupNode( vibens::Module * module, vibens::Simulation * s, QVector<ModelNode * > * modelnodes, MainWindow * resultWidget);
-     virtual GUIPort * getGUIPort(vibens::Port * p);
+    GroupNode( DM::Module * module, DM::Simulation * s, QVector<ModelNode * > * modelnodes, MainWindow * resultWidget);
+     virtual GUIPort * getGUIPort(DM::Port * p);
     /*QVector<LinkNodeTuple * > getInputTupleRaster(){return this->InputTupleRaster;}
     QVector<LinkNodeTuple * > getOutputTupleRaster(){return this->OutputTupleRaster;}
     QVector<LinkNodeTuple * > getInputTupleVector(){return this->InputTupleVector;}

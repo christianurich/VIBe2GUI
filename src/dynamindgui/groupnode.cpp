@@ -111,32 +111,32 @@ void GroupNode::maximize() {
 }
 
 void GroupNode::updatePorts () {
-    vibens::Group * g = (vibens::Group*)this->VIBeModule;
+    DM::Group * g = (DM::Group*)this->VIBeModule;
 
-    BOOST_FOREACH (vibens::PortTuple * p,g->getInPortTuples()){
+    BOOST_FOREACH (DM::PortTuple * p,g->getInPortTuples()){
         this->addTuplePort(p);
 
     }
-    BOOST_FOREACH (vibens::PortTuple * p,g->getOutPortTuples()){
+    BOOST_FOREACH (DM::PortTuple * p,g->getOutPortTuples()){
         this->addTuplePort(p);
 
     }
     ModelNode::updatePorts();
 }
 
-void GroupNode::addTuplePort(vibens::PortTuple * p) {
+void GroupNode::addTuplePort(DM::PortTuple * p) {
     QStringList ExistingPorts;
 
-    if (p->getPortType() == vibens::VIBe2::INTUPLEDOUBLEDATA)
+    if (p->getPortType() == DM::VIBe2::INTUPLEDOUBLEDATA)
         ExistingPorts = this->ExistingInPorts;
-    if (p->getPortType() == vibens::VIBe2::OUTTUPLEDOUBLEDATA)
+    if (p->getPortType() == DM::VIBe2::OUTTUPLEDOUBLEDATA)
         ExistingPorts = this->ExistingOutPorts;
     foreach (QString pname, ExistingPorts) {
         if (pname.compare(QString::fromStdString(p->getName())) == 0) {
             return;
         }
     }
-    if  (p->getPortType() > vibens::VIBe2::OUTPORTS) {
+    if  (p->getPortType() > DM::VIBe2::OUTPORTS) {
         GUIPortTuple * gui_pt = new GUIPortTuple();
         ExistingInPorts << QString::fromStdString(p->getName());
         GUIPort * gui_p = new  GUIPort(this, p->getInPort());
@@ -167,7 +167,7 @@ void GroupNode::addTuplePort(vibens::PortTuple * p) {
 
 
 }
-GUIPort *  GroupNode::getGUIPort(vibens::Port * p) {
+GUIPort *  GroupNode::getGUIPort(DM::Port * p) {
     foreach(GUIPortTuple * gui_pt,this->OutputTuplePorts) {
         if (gui_pt->inPort->getVIBePort() == p)
             return gui_pt->inPort;
@@ -192,7 +192,7 @@ void GroupNode::removeTuplePort(int Type, QString s) {
 
 }
 
-GroupNode::GroupNode( vibens::Module *module, vibens::Simulation * s, QVector<ModelNode * > * modelnodes, MainWindow * widget): ModelNode( module, s, modelnodes,widget)
+GroupNode::GroupNode( DM::Module *module, DM::Simulation * s, QVector<ModelNode * > * modelnodes, MainWindow * widget): ModelNode( module, s, modelnodes,widget)
 {
 
     this->childnodes = QVector<ModelNode*>();
@@ -236,10 +236,10 @@ GroupNode::GroupNode( vibens::Module *module, vibens::Simulation * s, QVector<Mo
         QString name = QString::fromStdString(it->first);
         int type = it->second;
 
-        if (type == vibens::VIBe2::DOUBLEDATA_IN) {
+        if (type == DM::VIBe2::DOUBLEDATA_IN) {
             //module.inputDouble.append(name);
         }
-        if (type == vibens::VIBe2::DOUBLEDATA_OUT) {
+        if (type == DM::VIBe2::DOUBLEDATA_OUT) {
             //module.outputDouble.append(name);
         }
 
@@ -366,7 +366,7 @@ QRectF GroupNode::boundingRect() const {
 }
 void GroupNode::addModelNode(ModelNode *m) {
     this->childnodes.push_back(m);
-    m->getVIBeModel()->setGroup((vibens::Group *)this->getVIBeModel());
+    m->getVIBeModel()->setGroup((DM::Group *)this->getVIBeModel());
 }
 void GroupNode::mouseMoveEvent ( QGraphicsSceneMouseEvent * event )  {
     this->setSelected(true);
@@ -381,9 +381,9 @@ void GroupNode::mouseMoveEvent ( QGraphicsSceneMouseEvent * event )  {
 
 
 void  GroupNode::setGroupZValue() {
-    vibens::Logger(vibens::Debug) << "Set Z Level";
+    DM::Logger(DM::Debug) << "Set Z Level";
     if (this->parentGroup != 0) {
-        vibens::Logger(vibens::Debug) << "ParentGroup Z Level" << this->parentGroup->zValue();
+        DM::Logger(DM::Debug) << "ParentGroup Z Level" << this->parentGroup->zValue();
         if (this->parentGroup->zValue()+1 != this->zValue())
             this->setZValue(this->parentGroup->zValue()+1);
     }

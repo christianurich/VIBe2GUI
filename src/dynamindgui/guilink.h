@@ -49,8 +49,8 @@ private:
     QPainterPath connection_path, handle_path, united;
     QPointF source, sink;
     bool hovered;
-    vibens::ModuleLink * VIBelink;
-    vibens::Simulation * sim;
+    DM::ModuleLink * VIBelink;
+    DM::Simulation * sim;
 
 
 protected:
@@ -70,8 +70,8 @@ public:
     GUIPort * getInPort(){return inPort;}
     bool isBack(){return this->VIBelink->isBackLink();}
     void setBack(bool b){this->VIBelink->setBackLink(b);}
-    void setSimulation(vibens::Simulation * sim) {this->sim = sim;}
-    void setVIBeLink(vibens::ModuleLink * link){this->VIBelink = link;}
+    void setSimulation(DM::Simulation * sim) {this->sim = sim;}
+    void setVIBeLink(DM::ModuleLink * link){this->VIBelink = link;}
     ~GUILink();
 
     QPainterPath shape() const {

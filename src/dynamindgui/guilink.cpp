@@ -62,7 +62,7 @@ QRectF GUILink::boundingRect() const {
 }
 
 GUILink::~GUILink() {
-    vibens::Logger(vibens::Debug) << "Remove GUILink" ;
+    DM::Logger(DM::Debug) << "Remove GUILink" ;
     if (this->outPort != 0)
         this->outPort->removeLink(this);
     if (this->inPort != 0)

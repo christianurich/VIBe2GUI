@@ -40,11 +40,11 @@
 #define VECTORDATA 1
 
 using namespace boost;
-namespace vibens {
+namespace DM {
 class Module;
 }
 
-class  VIBE_HELPER_DLL_EXPORT DataManagment : public vibens::DataObserver
+class  VIBE_HELPER_DLL_EXPORT DataManagment : public DM::DataObserver
 {
 private:
     QTreeWidgetItem * rootVectorItem;
@@ -61,11 +61,11 @@ private:
 public:
     DataManagment(QTreeWidgetItem * rootItem,  Plot * plot);
 
-    void observeNewRasterData(vibens::Module * module, std::string name);
-    void observeNewVectorData(vibens::Module * module, std::string name);
+    void observeNewRasterData(DM::Module * module, std::string name);
+    void observeNewVectorData(DM::Module * module, std::string name);
 
-    void observerDeletedRasterData(vibens::Module  * module);
-    void observerDeletedVectorData(vibens::Module   * module);
+    void observerDeletedRasterData(DM::Module  * module);
+    void observerDeletedVectorData(DM::Module   * module);
 
     void setCurrentScene(std::string scene, int ID);
 

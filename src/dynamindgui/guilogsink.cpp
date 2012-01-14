@@ -36,29 +36,29 @@ GuiLogSink::~GuiLogSink() {
     delete mutex;
 }
 
-vibens::LogSink &GuiLogSink::operator<<(const std::string &string) {
+DM::LogSink &GuiLogSink::operator<<(const std::string &string) {
         QMutexLocker locker(mutex);
 	buf += QString::fromStdString(string);
 	return *this;
 }
 
-vibens::LogSink &GuiLogSink::operator<<(const char *string) {
+DM::LogSink &GuiLogSink::operator<<(const char *string) {
         QMutexLocker locker(mutex);
 	buf += QString(string);
 	return *this;
 }
 
-/*vibens::LogSink &GuiLogSink::operator<<(int i) {
+/*DM::LogSink &GuiLogSink::operator<<(int i) {
         QMutexLocker locker(mutex);
 	buf += QString("%0").arg(i);
 	return *this;
 }*/
-vibens::LogSink &GuiLogSink::operator<<(double f) {
+DM::LogSink &GuiLogSink::operator<<(double f) {
         QMutexLocker locker(mutex);
         buf += QString("%2").arg(f);
         return *this;
 }
-vibens::LogSink &GuiLogSink::operator<<(vibens::LSEndl i) {
+DM::LogSink &GuiLogSink::operator<<(DM::LSEndl i) {
         QMutexLocker locker(mutex);
 	Q_EMIT newLogLine(buf);
 	buf.clear();

@@ -30,7 +30,7 @@
 #include <boost/foreach.hpp>
 #include <sstream>
 
-void DataManagment::observeNewVectorData(vibens::Module * module, std::string name) {
+void DataManagment::observeNewVectorData(DM::Module * module, std::string name) {
 
    //if (name.compare("VectorDataTo_85") == 0 || name.compare("VectorData_out_117") == 0 || name.compare("VectorData_out_118") == 0 ) {
         /*QTreeWidgetItem * item = new QTreeWidgetItem();
@@ -93,7 +93,7 @@ void DataManagment::deleteTreeWidgetItem(QTreeWidgetItem* item)
     delete item;
 }
 
-void DataManagment::observeNewRasterData(vibens::Module * module, std::string name) {
+void DataManagment::observeNewRasterData(DM::Module * module, std::string name) {
    //if (name.compare("MarkerMap_67") == 0 || name.compare("MarkerMap_74") == 0) {
          //if (name.compare("MarkerMap_67") == 0 || name.compare("Street") == 0 || name.compare("Agents") == 0 ) {
         /*RasterData rData = module->getRasterData(name);
@@ -119,10 +119,10 @@ void DataManagment::observeNewRasterData(vibens::Module * module, std::string na
 
 }
 
-void DataManagment::observerDeletedRasterData(vibens::Module * module) {
+void DataManagment::observerDeletedRasterData(DM::Module * module) {
 }
 
-void DataManagment::observerDeletedVectorData(vibens::Module *   module) {
+void DataManagment::observerDeletedVectorData(DM::Module *   module) {
 }
 void DataManagment::setCurrentScene(std::string scene, int ID){
     /*this->currentScene = scene;

@@ -32,7 +32,7 @@
 #include <QVector>
 
 
-class GUIDataObserver : public QObject, public vibens::DataObserver
+class GUIDataObserver : public QObject, public DM::DataObserver
 {
     Q_OBJECT
 

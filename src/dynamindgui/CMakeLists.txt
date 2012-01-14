@@ -1,22 +1,17 @@
 find_package(OpenGL)
 
 
-include_directories(${VIBE2CORE_INCLUDE_DIRS})
-include_directories(${CMAKE_CURRENT_BINARY_DIR}../vibegui )
+include_directories(${DYNAMINDCORE_INCLUDE_DIRS})
+include_directories(${CMAKE_CURRENT_BINARY_DIR}../dynamindgui )
 
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_BINARY_DIR})
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
-INCLUDE_DIRECTORIES(/home/christian/programms/VIBe2Core/src/python-swig)
-INCLUDE_DIRECTORIES(/home/christian/programms/VIBe2Core/build/debug/)
+
 
 include_directories(.)
 set(MOC_FILES  guilogsink.h  mainwindow.h plot.h preferences.h guimodelnode.h modelnode.h guilink.h StdRedirector.h application.h modelnodebutton.h simulationmanagment.h groupnode.h guiresultobserver.h guiimageresultview.h guidataobserver.h)
 file (GLOB CPP_GUI_FILES *.cpp)
 file (GLOB UI_FILES *.ui)
-
-SET_SOURCE_FILES_PROPERTIES(/home/christian/programms/VIBe2Core/build/debug/pydynamiteWRAP.cpp PROPERTIES GENERATED 1)
-SET(CPP_GUI_FILES ${CPP_GUI_FILES} /home/christian/programms/VIBe2Core/src/python-swig/pythonenv.cpp /home/christian/programms/VIBe2Core/build/debug/pydynamiteWRAP.cpp)
-
 
 
 #set (MOC_FILES datamanagment.h)
@@ -34,10 +29,10 @@ include_directories( ${QT_QTGUI_INCLUDE_DIR})
 include_directories(../3dparty/qwt-5.2.0/src)
 include_directories(../3dparty/alglib/src)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
-add_library(vibe2gui SHARED ${CPP_GUI_FILES}  ${QWT_CPPS} ${QTGL_CPPS} ${ALGLIB_CPP})
-target_link_libraries(vibe2gui ${VIBE2CORE_LIBRARIES} ${VIBE2HELPER_LIBRARIES} ${OPENGL_LIBRARIES} ${QT_LIBRARIES} ${QGLVIEWER_LIBRARIES})
+add_library(dynamindgui SHARED ${CPP_GUI_FILES}  ${QWT_CPPS} ${QTGL_CPPS} ${ALGLIB_CPP})
+target_link_libraries(dynamindgui ${DYNAMINDCORE_LIBRARIES}  ${OPENGL_LIBRARIES} ${QT_LIBRARIES} ${QGLVIEWER_LIBRARIES})
 
 
-INSTALL(TARGETS vibe2gui
+INSTALL(TARGETS dynamindgui
         DESTINATION "lib"
         PERMISSIONS OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
