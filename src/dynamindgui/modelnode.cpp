@@ -55,12 +55,12 @@ std::string ModelNode::getParameterAsString(std::string name) {
 
     std::ostringstream val;
     int id = this->VIBeModule->getParameterList()[name];
-    if (id == vibens::VIBe2::DOUBLE || id == vibens::VIBe2::LONG || id == vibens::VIBe2::STRING) {
-        if (id == vibens::VIBe2::DOUBLE)
+    if (id == DM::VIBe2::DOUBLE || id == DM::VIBe2::LONG || id == DM::VIBe2::STRING) {
+        if (id == DM::VIBe2::DOUBLE)
             val << this->VIBeModule->getParameter<double>(name);
-        if (id == vibens::VIBe2::LONG)
+        if (id == DM::VIBe2::LONG)
             val << this->VIBeModule->getParameter<long>(name);
-        if (id == vibens::VIBe2::STRING)
+        if (id == DM::VIBe2::STRING)
             val << this->VIBeModule->getParameter<std::string>(name);
         return val.str();
     }
@@ -70,10 +70,10 @@ void ModelNode::updatePorts () {
 
     //Add Ports
     //If Port exists is checked by addPort
-    BOOST_FOREACH (vibens::Port * p, this->VIBeModule->getInPorts()){
+    BOOST_FOREACH (DM::Port * p, this->VIBeModule->getInPorts()){
         this->addPort(p);
     }
-    BOOST_FOREACH (vibens::Port * p, this->VIBeModule->getOutPorts()) {
+    BOOST_FOREACH (DM::Port * p, this->VIBeModule->getOutPorts()) {
         this->addPort(p);
     }
 
@@ -81,10 +81,10 @@ void ModelNode::updatePorts () {
         GUIPort * gp = this->ports[i];
         if (gp->getVIBePort()->isPortTuple())
             continue;
-        if (gp->getPortType()  > vibens::VIBe2::OUTPORTS ) {
+        if (gp->getPortType()  > DM::VIBe2::OUTPORTS ) {
             bool  portExists = false;
 
-            BOOST_FOREACH (vibens::Port * p, this->VIBeModule->getInPorts()){
+            BOOST_FOREACH (DM::Port * p, this->VIBeModule->getInPorts()){
                 std::string portname1 = p->getLinkedDataName();
                 std::string portname2 = gp->getPortName().toStdString();
                 if (portname1.compare(portname2) == 0) {
@@ -97,10 +97,10 @@ void ModelNode::updatePorts () {
                 delete gp;
             }
         }
-        if (gp->getPortType()  < vibens::VIBe2::OUTPORTS ) {
+        if (gp->getPortType()  < DM::VIBe2::OUTPORTS ) {
             bool  portExists = false;
 
-            BOOST_FOREACH (vibens::Port * p, this->VIBeModule->getOutPorts()){
+            BOOST_FOREACH (DM::Port * p, this->VIBeModule->getOutPorts()){
                 if (p->getLinkedDataName().compare(gp->getPortName().toStdString()) == 0) {
                     portExists = true;
                 }
@@ -117,16 +117,16 @@ void ModelNode::updatePorts () {
 
 }
 void ModelNode::resetModel() {
-    vibens::Module *oldmodule = this->VIBeModule;
+    DM::Module *oldmodule = this->VIBeModule;
     this->VIBeModule = this->simulation->resetModule(this->VIBeModule->getUuid());
 
     if(this->VIBeModule==oldmodule)
     {
-        vibens::Logger(vibens::Error) << "The code-base has changed for module \"" << this->VIBeModule->getName() << "\". There is an error in the new code-base";
+        DM::Logger(DM::Error) << "The code-base has changed for module \"" << this->VIBeModule->getName() << "\". There is an error in the new code-base";
     }
 
     foreach(GUIPort * p, this->ports) {
-        vibens::Port * po = 0;
+        DM::Port * po = 0;
         if ((this->VIBeModule->getInPort( p->getPortName().toStdString()) == 0)) {
             po = this->VIBeModule->getOutPort( p->getPortName().toStdString());
         } else {
@@ -137,8 +137,8 @@ void ModelNode::resetModel() {
 
 }
 
-void ModelNode::addPort(vibens::Port * p) {
-    if (p->getPortType() < vibens::VIBe2::OUTPORTS ) {
+void ModelNode::addPort(DM::Port * p) {
+    if (p->getPortType() < DM::VIBe2::OUTPORTS ) {
         foreach (QString pname, ExistingInPorts) {
             if (pname.compare(QString::fromStdString(p->getLinkedDataName())) == 0) {
                 return;
@@ -156,7 +156,7 @@ void ModelNode::addPort(vibens::Port * p) {
 
     GUIPort * gui_p = new  GUIPort(this, p);
     ports.append(gui_p);
-    if  (p->getPortType() < vibens::VIBe2::OUTPORTS) {
+    if  (p->getPortType() < DM::VIBe2::OUTPORTS) {
         gui_p->setPos(this->boundingRect().width()-gui_p->boundingRect().width(),gui_p->boundingRect().height()*this->outputCounter++);
     }else {
         gui_p->setPos(0,gui_p->boundingRect().height()*this->inputCounter++);
@@ -174,7 +174,7 @@ void ModelNode::addPort(vibens::Port * p) {
 
 //ModelNode
 
-ModelNode::ModelNode( vibens::Module * VIBeModule, vibens::Simulation * simulation, QVector<ModelNode * > * modelnodes, MainWindow * widget)
+ModelNode::ModelNode( DM::Module * VIBeModule, DM::Simulation * simulation, QVector<ModelNode * > * modelnodes, MainWindow * widget)
 {
     this->ResultWidget = widget;
     this->guiPortObserver.setModelNode(this);
@@ -307,7 +307,7 @@ void ModelNode::mousePressEvent ( QGraphicsSceneMouseEvent * event ) {
 }
 
 
-GUIPort * ModelNode::getGUIPort(vibens::Port * p) {
+GUIPort * ModelNode::getGUIPort(DM::Port * p) {
 
     foreach (GUIPort * gui_p, this->ports){
         if (gui_p->getVIBePort() == p)
@@ -328,8 +328,8 @@ void ModelNode::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
 
     GroupMenu->setTitle("Group");
     QVector<QAction *> actions;
-    std::vector<vibens::Group*> gs = this->simulation->getGroups();
-    BOOST_FOREACH (vibens::Group * g, gs) {
+    std::vector<DM::Group*> gs = this->simulation->getGroups();
+    BOOST_FOREACH (DM::Group * g, gs) {
         if (this->VIBeModule->getUuid().compare(g->getUuid())) {
             QAction *a = GroupMenu->addAction(QString::fromStdString(g->getName()));
             a->setObjectName(QString::fromStdString(g->getUuid()));
@@ -393,7 +393,7 @@ void ModelNode::addGroup() {
     QString name = QObject::sender()->objectName();
     GroupNode * gn;
     if (name.compare(QString::fromStdString(this->simulation->getRootGroup()->getUuid())) == 0) {
-        this->VIBeModule->setGroup((vibens::Group * ) this->simulation->getRootGroup());
+        this->VIBeModule->setGroup((DM::Group * ) this->simulation->getRootGroup());
 
         return;
     }
@@ -413,24 +413,24 @@ void ModelNode::addGroup() {
 }
 
 void ModelNode::printData() {
-    vibens::Logger(vibens::Debug) << this->getVIBeModel()->getName();
+    DM::Logger(DM::Debug) << this->getVIBeModel()->getName();
 
-    foreach (vibens::Port * p, this->getVIBeModel()->getOutPorts())
+    foreach (DM::Port * p, this->getVIBeModel()->getOutPorts())
     {
         std::string dataname = p->getLinkedDataName();
-        vibens::Logger(vibens::Debug) << dataname;
+        DM::Logger(DM::Debug) << dataname;
         DM::System * sys = this->getVIBeModel()->getData(dataname);
         if (sys == 0) {
             continue;
         }
         foreach (std::string name, sys->getNamesOfViews()) {
-            vibens::Logger(vibens::Debug) << name;
+            DM::Logger(DM::Debug) << name;
             DM::View view = sys->getViewDefinition(name);
             DM::Component * c = sys->getComponent(view.getIdOfDummyComponent());
 
              std::map<std::string,DM::Attribute*> attributes = c->getAllAttributes();
              for (std::map<std::string,DM::Attribute*>::const_iterator it  = attributes.begin(); it != attributes.end(); ++it) {
-                 vibens::Logger(vibens::Debug) << it->first;
+                 DM::Logger(DM::Debug) << it->first;
              }
         }
 

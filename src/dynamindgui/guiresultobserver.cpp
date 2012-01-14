@@ -59,7 +59,7 @@ void GUIResultObserver::addResultImage(std::string UUID, std::string filename) {
 
 }
 void GUIResultObserver::addDoubleDataToPlot(std::string UUID, double x, double y) {
-    vibens::Logger(vibens::Debug) <<  "Send Double Data" << x << "/" << y;
+    DM::Logger(DM::Debug) <<  "Send Double Data" << x << "/" << y;
 
     if (this->PlotDoubleUUIDs.indexOf(this->UUID)< 0) {
         this->UUID = UUID;

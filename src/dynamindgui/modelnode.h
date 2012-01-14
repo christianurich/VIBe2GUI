@@ -69,7 +69,7 @@ protected:
     QVector<ModelNode * > * nodes;
     GroupNode * parentGroup;
 
-    vibens::Module * VIBeModule ;
+    DM::Module * VIBeModule ;
     QGraphicsSimpleTextItem * simpleTextItem;
 
     int id;
@@ -82,14 +82,14 @@ protected:
     virtual void mouseDoubleClickEvent ( QGraphicsSceneMouseEvent * event );
     virtual void mousePressEvent ( QGraphicsSceneMouseEvent * event );
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
-    vibens::Simulation * simulation;
+    DM::Simulation * simulation;
     MainWindow * ResultWidget;
 
 public:
     QStringList ExistingInPorts;
     QStringList ExistingOutPorts;
     ModelNode(QGraphicsItem * parent = 0, QGraphicsScene * scene = 0);
-    ModelNode( vibens::Module * VIBeModule, vibens::Simulation *simulation, QVector<ModelNode * > * modelnodes, MainWindow * resultWidget);
+    ModelNode( DM::Module * VIBeModule, DM::Simulation *simulation, QVector<ModelNode * > * modelnodes, MainWindow * resultWidget);
 
     int type() const {return Type; }
     virtual ~ModelNode();
@@ -102,8 +102,8 @@ public:
     QString getName(){return QString::fromStdString(this->VIBeModule->getClassName());}
     void setID(int id){this->VIBeModule->setID(id); this->id = id;}
 
-    void addPort(vibens::Port * p);
-    virtual GUIPort * getGUIPort(vibens::Port * p);
+    void addPort(DM::Port * p);
+    virtual GUIPort * getGUIPort(DM::Port * p);
     boost::unordered_map<std::string, int> getParameters(){return this->VIBeModule->getParameterList();}
 
     std::string getParameterAsString(std::string name);
@@ -124,8 +124,8 @@ public:
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
     QRectF boundingRect() const;
 
-    vibens::Module * getVIBeModel(){return this->VIBeModule;}
-    vibens::Simulation * getSimulation() {return this->simulation;}
+    DM::Module * getVIBeModel(){return this->VIBeModule;}
+    DM::Simulation * getSimulation() {return this->simulation;}
 
 
     virtual void updatePorts();

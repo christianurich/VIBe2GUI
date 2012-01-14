@@ -35,7 +35,7 @@
 #include <QColor>
 #include <QObject>
 #include "compilersettings.h"
-namespace vibens {
+namespace DM {
 class Port;
 }
 
@@ -51,7 +51,7 @@ private:
     ModelNode * modelNode;
     GUILink * tmp_link;
     QVector<GUILink * > links;
-    vibens::Port * p;
+    DM::Port * p;
     QString PortName;
     int PortType;
     bool isHover;
@@ -62,7 +62,7 @@ private:
     float x1;
 
 public:
-    GUIPort(ModelNode * modelNode, vibens::Port * p);
+    GUIPort(ModelNode * modelNode, DM::Port * p);
     ~GUIPort();
     void hoverEnterEvent ( QGraphicsSceneHoverEvent * event );
     void hoverLeaveEvent ( QGraphicsSceneHoverEvent * event );
@@ -80,9 +80,9 @@ public:
     bool isLinked();
     void setHover(bool b){this->isHover=b;}
     void refreshLinks();
-    vibens::Port * getVIBePort();
+    DM::Port * getVIBePort();
     void removeLink(GUILink * l);
-    void updatePort(vibens::Port * p);
+    void updatePort(DM::Port * p);
 
 
 

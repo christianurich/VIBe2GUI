@@ -52,7 +52,7 @@ public:
     void setModelNodes( QVector<ModelNode * > * m) {this->mnodes = m;}
     void setGroupNodes(QVector<GroupNode * > * g) {this->gnodes = g;}
     void setResultViewer(MainWindow * w){this->ResultViewer = w;}
-    void setSimulation(vibens::Simulation * simulation){this->simulation = simulation;}
+    void setSimulation(DM::Simulation * simulation){this->simulation = simulation;}
 
 
 protected:
@@ -64,8 +64,8 @@ private:
     QVector<ModelNode* > * mnodes;
     QVector<GroupNode* > * gnodes;
     //Groups * groups;
-    vibens::ModuleRegistry * moduleregistry;
-    vibens::Simulation * simulation;
+    DM::ModuleRegistry * moduleregistry;
+    DM::Simulation * simulation;
     MainWindow * ResultViewer;
 
 };

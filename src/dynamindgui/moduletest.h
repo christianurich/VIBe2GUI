@@ -34,7 +34,7 @@ class ModuleTest
     public:
         ModuleTest();
         void run();
-        //vibens::Module * m;
+        //DM::Module * m;
     };
 
 #endif // MODULETEST_H

@@ -44,7 +44,7 @@ private:
     QMap<QString, QWidget *> elements;
     QGridLayout *layout1 ;
     ModuleDescription * moduleDescription;
-    vibens::Module * module;
+    DM::Module * module;
     QMap<QString, QGridLayout * > UserDefinedContainer;
     QString GroupID;
     ModelNode * modelnode;
@@ -53,7 +53,7 @@ private:
 
 
 public:
-    GUIModelNode(vibens::Module * m, ModelNode * mn = 0, QWidget * parent = 0);
+    GUIModelNode(DM::Module * m, ModelNode * mn = 0, QWidget * parent = 0);
 
     ~GUIModelNode();
 

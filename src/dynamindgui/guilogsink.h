@@ -32,7 +32,7 @@
 #include <QMutex>
 #include <QMutexLocker>
 
-class GuiLogSink : public QObject, public vibens::LogSink {
+class GuiLogSink : public QObject, public DM::LogSink {
 	Q_OBJECT
 public:
         QMutex *mutex;
@@ -41,11 +41,11 @@ public:
 
 	void close() {};
 
-        vibens::LogSink &operator<<(const std::string &string);
-        vibens::LogSink &operator<<(const char *string);
-        vibens::LogSink &operator<<(int i);
-        vibens::LogSink &operator<<(double f);
-        vibens::LogSink &operator<<(vibens::LSEndl i);
+        DM::LogSink &operator<<(const std::string &string);
+        DM::LogSink &operator<<(const char *string);
+        DM::LogSink &operator<<(int i);
+        DM::LogSink &operator<<(double f);
+        DM::LogSink &operator<<(DM::LSEndl i);
 
 Q_SIGNALS:
 	void newLogLine(const QString &line);

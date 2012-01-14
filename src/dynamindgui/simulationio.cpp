@@ -41,7 +41,7 @@ SimulationIO::SimulationIO()
 {
 }
 
-void SimulationIO::loadSimluation(QString FileName,   vibens::Simulation *simulation,  std::map<std::string, std::string> UUIDTranslation, QVector<ModelNode * > * mnodes)
+void SimulationIO::loadSimluation(QString FileName,   DM::Simulation *simulation,  std::map<std::string, std::string> UUIDTranslation, QVector<ModelNode * > * mnodes)
 {
 
     this->sim = simulation;
@@ -97,7 +97,7 @@ bool SimulationIO::endElement(const QString & namespaceURI,
     Q_UNUSED(namespaceURI)
     Q_UNUSED(localName)
     if (qName == "GUI_Node") {
-        vibens::Module * VIBe2m;
+        DM::Module * VIBe2m;
         VIBe2m = sim->getModuleWithUUID(UUIDTransation[tmpUUID]);
         if (VIBe2m != 0) {
             ModelNode * m;

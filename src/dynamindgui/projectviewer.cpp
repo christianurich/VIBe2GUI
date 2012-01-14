@@ -42,7 +42,7 @@ ProjectViewer::ProjectViewer( QWidget * parent) : QGraphicsScene(parent)
     this->id = 0;
     this->mnodes = mnodes;
 
-    //this->sim = new vibens::Simulation();
+    //this->sim = new DM::Simulation();
 
 }
 
@@ -67,7 +67,7 @@ void ProjectViewer::dropEvent(QGraphicsSceneDragDropEvent *event)
     std::string type = lw->currentItem()->text(1).toStdString();
     if (type.compare("Module") == 0) {
         ss << module << "_" << this->id++;
-        vibens::Module * mvibe= this->simulation->addModule(module);
+        DM::Module * mvibe= this->simulation->addModule(module);
 
         if(!mvibe)
             return;

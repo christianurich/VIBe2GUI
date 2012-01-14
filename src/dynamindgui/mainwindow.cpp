@@ -111,7 +111,7 @@ void MainWindow::registerPlotWindow(GUIResultObserver * ress, double x, double y
 
     this->tabWidget->addTab(p,QString::fromStdString(this->simulation->getModuleWithUUID(ress->getUUID())->getName()) );
 
-    vibens::Logger(vibens::Debug) << "Register Plot";
+    DM::Logger(DM::Debug) << "Register Plot";
     connect(ress, SIGNAL(newDoubleDataForPlot(double, double)), p, SLOT(appendData(double, double)), Qt::BlockingQueuedConnection);
     p->appendData( x,y);
 }
@@ -124,27 +124,27 @@ void MainWindow::ReloadSimulation() {
 }
 
 void MainWindow::startEditor() {
-    vibens::PythonEnv::getInstance()->startEditra();
+    DM::PythonEnv::getInstance()->startEditra();
 }
 
 MainWindow::MainWindow(QWidget * parent)
 {
     log_updater = new GuiLogSink();
     //#ifdef _DEBUG
-    vibens::Log::init(log_updater,vibens::Debug);
+    DM::Log::init(log_updater,DM::Debug);
     //#else
-    //    vibens::Log::init(log_updater,vibens::Standard);
+    //    DM::Log::init(log_updater,DM::Standard);
     //#endif
     running =  false;
     setupUi(this);
-    vibens::DataManagement::init();
+    DM::DataManagement::init();
     this->database = new  DMDatabase();
-    vibens::DataManagement::getInstance().registerDataBase(this->database);
-    vibens::PythonEnv *env = vibens::PythonEnv::getInstance();
+    DM::DataManagement::getInstance().registerDataBase(this->database);
+    DM::PythonEnv *env = DM::PythonEnv::getInstance();
 
     //this->graphicsView->setViewport(new QGLWidget());
 
-    this->simulation = new vibens::Simulation();
+    this->simulation = new DM::Simulation();
     this->simulation->registerDataBase(this->database);
 
     this->scene = new ProjectViewer();
@@ -174,7 +174,7 @@ MainWindow::MainWindow(QWidget * parent)
 
 
 
-    QSettings settings("IUT", "VIBe2");
+    QSettings settings("IUT", "DYNAMIND");
     //settings.beginGroup("Preferences");
     if(settings.value("pythonModules").toString().isEmpty()) {
         counter++;
@@ -247,7 +247,7 @@ void MainWindow::createModuleListView() {
     //Add VIBe Modules
     QStringList filters;
     filters << "*.vib";
-   QSettings settings("IUT", "VIBe2");
+   QSettings settings("IUT", "DYNAMIND");
     QStringList moduleshome = settings.value("VIBeModules",QStringList()).toString().replace("\\","/").split(",");
     for (int index = 0; index < moduleshome.size(); index++) {
         QDir d = QDir(moduleshome[index]);
@@ -429,7 +429,7 @@ void MainWindow::importSimulation(QString fileName, QPointF offset) {
 
         for (std::map<std::string, std::string>::iterator it = UUID_Translation.begin(); it != UUID_Translation.end(); ++it ) {
             std::string uuid = it->second;
-            vibens::Module * m = this->simulation->getModuleWithUUID(uuid);
+            DM::Module * m = this->simulation->getModuleWithUUID(uuid);
 
             foreach(ModelNode * mn, *(mnodes)) {
                 if (mn->getVIBeModel() == m ) {
@@ -440,7 +440,7 @@ void MainWindow::importSimulation(QString fileName, QPointF offset) {
 
         }
 
-        vibens::Logger(vibens::Debug) << offset.x();
+        DM::Logger(DM::Debug) << offset.x();
         for (int i = 0; i < new_modules.size(); i++) {
 
             ModelNode * module = new_modules.at(i);
@@ -460,14 +460,14 @@ void MainWindow::importSimulation(QString fileName, QPointF offset) {
 
             }
             module->setPos(module->pos()+offset);
-            vibens::Logger(vibens::Debug) << module->pos().x();
+            DM::Logger(DM::Debug) << module->pos().x();
             module->updatePorts();
 
 
         }
 
 
-        BOOST_FOREACH(vibens::ModuleLink * l,this->simulation->getLinks()) {
+        BOOST_FOREACH(DM::ModuleLink * l,this->simulation->getLinks()) {
             //Check if Linke is allready places
 
             std::cout << "link" << std::endl;
@@ -550,7 +550,7 @@ void MainWindow::loadSimulation(int id) {
         }
 
 
-        BOOST_FOREACH(vibens::ModuleLink * l,this->simulation->getLinks()) {
+        BOOST_FOREACH(DM::ModuleLink * l,this->simulation->getLinks()) {
             std::cout << "link" << std::endl;
             GUILink * gui_link  = new GUILink();
             ModelNode * outmodule;

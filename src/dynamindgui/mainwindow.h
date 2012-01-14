@@ -54,7 +54,7 @@ class GroupNode;
 class GuiLogSink;
 class DMDatabase;
 
-namespace vibens {
+namespace DM {
 
     class Simulation;
 }
@@ -71,7 +71,7 @@ public:
     QTreeWidgetItem * getRootItemModelTree(){return this->rootItemModelTree;}
     GuiLogSink *log_updater;
 private:
-    vibens::Simulation * simulation;
+    DM::Simulation * simulation;
     DMDatabase * database;
     DataManagment * data;
     SimulationManagment * simmanagment;
@@ -85,7 +85,7 @@ private:
     int counter;
     bool running;
     QTreeWidgetItem * rootItemModelTree;
-    vibens::ModuleRegistry registry;
+    DM::ModuleRegistry registry;
     void writeGUIInformation(QString FileName);
     QwtPlotMarker * points;
 

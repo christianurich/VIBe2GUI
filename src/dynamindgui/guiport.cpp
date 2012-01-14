@@ -43,14 +43,14 @@ void GUIPort::removeLink(GUILink * l) {
     int index = this->links.indexOf(l);
     if (index > -1) {
         this->links.remove(index);
-        vibens::Logger(vibens::Debug) << "Remove GUILink from" << this->getPortName() << this->links.size();
+        DM::Logger(DM::Debug) << "Remove GUILink from" << this->getPortName() << this->links.size();
     }
 }
-void GUIPort::updatePort(vibens::Port * p) {
+void GUIPort::updatePort(DM::Port * p) {
     this->p = p;
 
 }
-GUIPort::GUIPort(ModelNode *modelNode, vibens::Port *p) : QGraphicsItem(modelNode)
+GUIPort::GUIPort(ModelNode *modelNode, DM::Port *p) : QGraphicsItem(modelNode)
 {
     this->setParentItem(modelNode);
     this->setFlag(QGraphicsItem::ItemSendsScenePositionChanges, true);
@@ -67,9 +67,9 @@ GUIPort::GUIPort(ModelNode *modelNode, vibens::Port *p) : QGraphicsItem(modelNod
     this->PortType = p->getPortType();
     this->simpleTextItem = new QGraphicsSimpleTextItem (QString::fromStdString(p->getLinkedDataName()));
 
-    if (p->getPortType() == vibens::VIBe2::INSYSTEM || p->getPortType() == vibens::VIBe2::OUTSYSTEM)
+    if (p->getPortType() == DM::VIBe2::INSYSTEM || p->getPortType() == DM::VIBe2::OUTSYSTEM)
         color = COLOR_VECTORPORT;
-    if (p->getPortType() == vibens::VIBe2::INDOUBLEDATA || p->getPortType() == vibens::VIBe2::OUTDOUBLEDATA)
+    if (p->getPortType() == DM::VIBe2::INDOUBLEDATA || p->getPortType() == DM::VIBe2::OUTDOUBLEDATA)
         color = COLOR_DOUBLEPORT
                 hoverElement = 0;
 
@@ -93,7 +93,7 @@ void GUIPort::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, Q
         l = this->simpleTextItem->boundingRect().width()+4;
         h = this->simpleTextItem->boundingRect().height()+4;
         x1 = 0;
-        if (this->p->getPortType() > vibens::VIBe2::OUTPORTS)
+        if (this->p->getPortType() > DM::VIBe2::OUTPORTS)
             x1 = -l+14;
         QPainterPath path;
         QPen pen(Qt::black, 1.5, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
@@ -133,15 +133,15 @@ QRectF GUIPort::boundingRect() const {
 void GUIPort::hoverEnterEvent ( QGraphicsSceneHoverEvent * event ) {
     this->isHover = true;
 
-    if (this->p->getPortType() == vibens::VIBe2::INSYSTEM|| this->p->getPortType() == vibens::VIBe2::OUTSYSTEM)
+    if (this->p->getPortType() == DM::VIBe2::INSYSTEM|| this->p->getPortType() == DM::VIBe2::OUTSYSTEM)
         color = COLOR_VECTORPORT;
-    if (p->getPortType() == vibens::VIBe2::INDOUBLEDATA || p->getPortType() == vibens::VIBe2::OUTDOUBLEDATA)
+    if (p->getPortType() == DM::VIBe2::INDOUBLEDATA || p->getPortType() == DM::VIBe2::OUTDOUBLEDATA)
         color = COLOR_DOUBLEPORT
                 prepareGeometryChange ();
     l = this->simpleTextItem->boundingRect().width()+4;
     h = this->simpleTextItem->boundingRect().height()+4;
     x1 = 0;
-    if (p->getPortType()  > vibens::VIBe2::OUTPORTS  )
+    if (p->getPortType()  > DM::VIBe2::OUTPORTS  )
         x1 = -l+14;
     this->update(this->boundingRect());
 }
@@ -150,9 +150,9 @@ void GUIPort::hoverLeaveEvent ( QGraphicsSceneHoverEvent * event ) {
     this->isHover = false;
     if (!LinkMode) {
 
-        if (p->getPortType()  == vibens::VIBe2::INSYSTEM || p->getPortType()  == vibens::VIBe2::OUTSYSTEM)
+        if (p->getPortType()  == DM::VIBe2::INSYSTEM || p->getPortType()  == DM::VIBe2::OUTSYSTEM)
             color = COLOR_VECTORPORT;
-        if (p->getPortType() == vibens::VIBe2::INDOUBLEDATA || p->getPortType() == vibens::VIBe2::OUTDOUBLEDATA)
+        if (p->getPortType() == DM::VIBe2::INDOUBLEDATA || p->getPortType() == DM::VIBe2::OUTDOUBLEDATA)
             color = COLOR_DOUBLEPORT
     }
     prepareGeometryChange ();
@@ -180,14 +180,14 @@ void GUIPort::mouseMoveEvent ( QGraphicsSceneMouseEvent * event )  {
         if ( this->type() == item->type() ) {
             GUIPort * link  = (GUIPort *) item;
 
-            if (getPortType() == vibens::VIBe2::OUTSYSTEM &&  link->getPortType() == vibens::VIBe2::INSYSTEM ) {
+            if (getPortType() == DM::VIBe2::OUTSYSTEM &&  link->getPortType() == DM::VIBe2::INSYSTEM ) {
                 link->setHover(true);
                 link->prepareGeometryChange();
                 link->update();
                 this->hoverElement = link;
                 setHover = true;
             }
-            if (getPortType() == vibens::VIBe2::OUTDOUBLEDATA &&  link->getPortType() == vibens::VIBe2::INDOUBLEDATA ) {
+            if (getPortType() == DM::VIBe2::OUTDOUBLEDATA &&  link->getPortType() == DM::VIBe2::INDOUBLEDATA ) {
                 link->setHover(true);
                 link->prepareGeometryChange();
                 link->update();
@@ -208,13 +208,13 @@ void GUIPort::mouseMoveEvent ( QGraphicsSceneMouseEvent * event )  {
 
 void GUIPort::mousePressEvent ( QGraphicsSceneMouseEvent * event )  {
 
-    if (getPortType() == vibens::VIBe2::INSYSTEM || getPortType() == vibens::VIBe2::OUTSYSTEM )
+    if (getPortType() == DM::VIBe2::INSYSTEM || getPortType() == DM::VIBe2::OUTSYSTEM )
         color = COLOR_VECTORPORT;
-    if (p->getPortType() == vibens::VIBe2::INDOUBLEDATA || p->getPortType() == vibens::VIBe2::OUTDOUBLEDATA)
+    if (p->getPortType() == DM::VIBe2::INDOUBLEDATA || p->getPortType() == DM::VIBe2::OUTDOUBLEDATA)
         color = COLOR_DOUBLEPORT
 
 
-                if (getPortType() < vibens::VIBe2::OUTPORTS) {
+                if (getPortType() < DM::VIBe2::OUTPORTS) {
             LinkMode = true;
             this->tmp_link = new GUILink();
             this->tmp_link->setOutPort(this);
@@ -222,16 +222,16 @@ void GUIPort::mousePressEvent ( QGraphicsSceneMouseEvent * event )  {
         }
 
 }
-vibens::Port * GUIPort::getVIBePort() {
+DM::Port * GUIPort::getVIBePort() {
     return this->p;
 }
 
 void GUIPort::mouseReleaseEvent ( QGraphicsSceneMouseEvent * event ) {
     std::cout << "mouseReleaseEvent " << std::endl;
-    if (getPortType() < vibens::VIBe2::OUTPORTS) {
+    if (getPortType() < DM::VIBe2::OUTPORTS) {
         LinkMode = false;
 
-        if (getPortType()  == vibens::VIBe2::INSYSTEM)
+        if (getPortType()  == DM::VIBe2::INSYSTEM)
             color = COLOR_VECTORPORT;
 
         this->update(this->boundingRect());
@@ -241,7 +241,7 @@ void GUIPort::mouseReleaseEvent ( QGraphicsSceneMouseEvent * event ) {
             if ( this->type() == item->type() ) {
                 GUIPort * endLink  = (GUIPort *) item;
 
-                if (getPortType() == vibens::VIBe2::OUTSYSTEM &&  endLink->getPortType() == vibens::VIBe2::INSYSTEM ) {
+                if (getPortType() == DM::VIBe2::OUTSYSTEM &&  endLink->getPortType() == DM::VIBe2::INSYSTEM ) {
                     this->tmp_link->setInPort(endLink);
                     //this->links.append(tmp_link);
                     //Create Link
@@ -257,7 +257,7 @@ void GUIPort::mouseReleaseEvent ( QGraphicsSceneMouseEvent * event ) {
 
 
                 }
-                if (getPortType() == vibens::VIBe2::OUTDOUBLEDATA &&  endLink->getPortType() == vibens::VIBe2::INDOUBLEDATA ) {
+                if (getPortType() == DM::VIBe2::OUTDOUBLEDATA &&  endLink->getPortType() == DM::VIBe2::INDOUBLEDATA ) {
                     this->tmp_link->setInPort(endLink);
                     //this->links.append(tmp_link);
                     //Create Link
@@ -291,7 +291,7 @@ void GUIPort::setLink(GUILink * l) {
     int index = this->links.indexOf(l);
     if (index == -1) {
         this->links.append(l);
-        vibens::Logger(vibens::Debug) << "Set Link" << this->getPortName();
+        DM::Logger(DM::Debug) << "Set Link" << this->getPortName();
     }
 
 }
