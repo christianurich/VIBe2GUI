@@ -68,6 +68,10 @@ void ProjectViewer::dropEvent(QGraphicsSceneDragDropEvent *event)
     if (type.compare("Module") == 0) {
         ss << module << "_" << this->id++;
         vibens::Module * mvibe= this->simulation->addModule(module);
+
+        if(!mvibe)
+            return;
+
         mvibe->setName(ss.str());
 
         ModelNode * node = 0;

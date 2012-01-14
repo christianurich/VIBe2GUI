@@ -120,7 +120,6 @@ void MainWindow::registerPlotWindow(GUIResultObserver * ress, double x, double y
 
 void MainWindow::ReloadSimulation() {
     this->simulation->reloadModules();
-    this->
     createModuleListView();
 }
 
