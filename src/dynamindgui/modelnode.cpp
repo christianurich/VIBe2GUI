@@ -111,7 +111,10 @@ void ModelNode::updatePorts () {
                 delete gp;
             }
         }
+
     }
+
+
 
 
 

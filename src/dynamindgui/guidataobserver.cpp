@@ -28,8 +28,8 @@
 GUIDataObserver::GUIDataObserver()
 {
 }
-void GUIDataObserver::observeNewRasterData(RasterData r) {
-    QVector<RasterData> vec;
+void GUIDataObserver::observeNewRasterData(DM::RasterData r) {
+    QVector<DM::RasterData> vec;
     vec.append(r);
     emit newRasterData(vec);
 }

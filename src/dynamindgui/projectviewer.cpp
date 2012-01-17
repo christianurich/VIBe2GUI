@@ -86,6 +86,10 @@ void ProjectViewer::dropEvent(QGraphicsSceneDragDropEvent *event)
         this->mnodes->append(node);
         node->setPos(event->scenePos());
         this->addItem(node);
+
+        //Update simulation after module is added
+        this->simulation->run(true);
+
     } else {
         this->ResultViewer->importSimulation( lw->currentItem()->text(2), event->scenePos());
     }

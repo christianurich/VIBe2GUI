@@ -39,12 +39,12 @@ GUIResultObserver::GUIResultObserver()
 void GUIResultObserver::setResultWidget(MainWindow *  mainWidget) {
     this->ResultWidgetParent = mainWidget;
 
-    connect(this, SIGNAL(registerWidet(GUIResultObserver * )), this->ResultWidgetParent , SLOT(registerResultWindow(GUIResultObserver *)), Qt::QueuedConnection);
+    /*connect(this, SIGNAL(registerWidet(GUIResultObserver * )), this->ResultWidgetParent , SLOT(registerResultWindow(GUIResultObserver *)), Qt::QueuedConnection);
     qRegisterMetaType< QVector<RasterData> >("QVector<RasterData>");
     connect(this, SIGNAL(register3DWidget(GUIResultObserver * ,  QVector<RasterData>)), this->ResultWidgetParent , SLOT(register3DResultWindow(GUIResultObserver *,  QVector<RasterData>)), Qt::BlockingQueuedConnection);
     qRegisterMetaType< QVector<RasterData> >("QVector<VectorData>");
     connect(this, SIGNAL(register3DWidget(GUIResultObserver * ,  QVector<VectorData>)), this->ResultWidgetParent , SLOT(register3DResultWindow(GUIResultObserver *,  QVector<VectorData>)), Qt::BlockingQueuedConnection);
-    connect(this, SIGNAL(registerPlotWidget(GUIResultObserver*,double, double)), this->ResultWidgetParent , SLOT(registerPlotWindow(GUIResultObserver*, double, double)), Qt::BlockingQueuedConnection);
+    connect(this, SIGNAL(registerPlotWidget(GUIResultObserver*,double, double)), this->ResultWidgetParent , SLOT(registerPlotWindow(GUIResultObserver*, double, double)), Qt::BlockingQueuedConnection);*/
 
 }
 

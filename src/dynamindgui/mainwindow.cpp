@@ -63,6 +63,8 @@
 #include <guidataobserver.h>
 #include <plot.h>
 #include <pythonenv.h>
+#include <guisimulationobserver.h>
+
 using namespace boost;
 void outcallback( const char* ptr, std::streamsize count, void* pTextBox )
 {
@@ -180,7 +182,12 @@ MainWindow::MainWindow(QWidget * parent)
         counter++;
         this->preferences();
     }
+    this->simobserver = new GUISimulationObserver(this->scene);
+
+    this->simulation->addSimulationObserver(this->simobserver );
+
     this->simmanagment = new SimulationManagment();
+
 
     connect(this->simmanagment, SIGNAL(valueChanged(int)), this->progressBar, SLOT(setValue(int)));
     //connect(this->simmanagment, SIGNAL(valueChanged(int)), this, SLOT(test(int)));

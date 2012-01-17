@@ -53,6 +53,7 @@ class DataManagment;
 class GroupNode;
 class GuiLogSink;
 class DMDatabase;
+class GUISimulationObserver;
 
 namespace DM {
 
@@ -75,6 +76,7 @@ private:
     DMDatabase * database;
     DataManagment * data;
     SimulationManagment * simmanagment;
+    GUISimulationObserver * simobserver;
 
     void createModuleListView();
     QMap<QString, ModuleDescription> modules;

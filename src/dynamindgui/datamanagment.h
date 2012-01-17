@@ -36,7 +36,7 @@
 
 
 
-#define RASTERDATA 2
+//#define RASTERDATA 2
 #define VECTORDATA 1
 
 using namespace boost;

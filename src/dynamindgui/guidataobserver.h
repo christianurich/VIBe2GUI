@@ -38,11 +38,11 @@ class GUIDataObserver : public QObject, public DM::DataObserver
 
 public:
     GUIDataObserver();
-    void observeNewRasterData(RasterData);
+    void observeNewRasterData(DM::RasterData);
 
 
 signals:
-    void newRasterData(QVector<RasterData>);
+    void newRasterData(QVector<DM::RasterData>);
 
 };
 

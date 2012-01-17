@@ -7,45 +7,41 @@
  * This file is part of VIBe2
  *
  * Copyright (C) 2011  Christian Urich
-
+ 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
-
+ 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
-
+ 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
  */
-#ifndef SIMULATIONMANAGMENT_H
-#define SIMULATIONMANAGMENT_H
 
-#include "compilersettings.h"
+#ifndef GUISIMULATIONOBSERVER_H
+#define GUISIMULATIONOBSERVER_H
+
 #include <simulationobserver.h>
-#include <QObject>
+#include <projectviewer.h>
 
-
-class VIBE_HELPER_DLL_EXPORT SimulationManagment :public QObject, public DM::SimulationObserver
+class GUISimulationObserver : public DM::SimulationObserver
 {
-    Q_OBJECT
-public:
-    SimulationManagment();
-    void SimulationCounter();
-    void resetSimcounter(){this->simcounter = 0;}
-    void VirtualRunDone(){}
-
 private:
-    int simcounter;
+    ProjectViewer * pv;
+public:
+    GUISimulationObserver(ProjectViewer * pv);
+
+    virtual void SimulationCounter(){}
+    virtual void VirtualRunDone();
 
 
-signals:
-        void valueChanged(int newValue);
+
 };
 
-#endif // SIMULATIONMANAGMENT_H
+#endif // GUISIMULATIONOBSERVER_H
