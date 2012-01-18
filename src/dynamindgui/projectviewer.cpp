@@ -36,13 +36,12 @@
 #include <sstream>
 
 using namespace boost;
-ProjectViewer::ProjectViewer( QWidget * parent) : QGraphicsScene(parent)
+ProjectViewer::ProjectViewer( DM::Group *g, QWidget *parent) : QGraphicsScene(parent)
 {
     this->setItemIndexMethod(QGraphicsScene::NoIndex);
     this->id = 0;
     this->mnodes = mnodes;
-
-    //this->sim = new DM::Simulation();
+    this->group = g;
 
 }
 

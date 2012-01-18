@@ -127,16 +127,16 @@ void GroupNode::updatePorts () {
 void GroupNode::addTuplePort(DM::PortTuple * p) {
     QStringList ExistingPorts;
 
-    if (p->getPortType() == DM::VIBe2::INTUPLEDOUBLEDATA)
+    if (p->getPortType() == DM::INTUPLEDOUBLEDATA)
         ExistingPorts = this->ExistingInPorts;
-    if (p->getPortType() == DM::VIBe2::OUTTUPLEDOUBLEDATA)
+    if (p->getPortType() == DM::OUTTUPLEDOUBLEDATA)
         ExistingPorts = this->ExistingOutPorts;
     foreach (QString pname, ExistingPorts) {
         if (pname.compare(QString::fromStdString(p->getName())) == 0) {
             return;
         }
     }
-    if  (p->getPortType() > DM::VIBe2::OUTPORTS) {
+    if  (p->getPortType() > DM::OUTPORTS) {
         GUIPortTuple * gui_pt = new GUIPortTuple();
         ExistingInPorts << QString::fromStdString(p->getName());
         GUIPort * gui_p = new  GUIPort(this, p->getInPort());
@@ -236,10 +236,10 @@ GroupNode::GroupNode( DM::Module *module, DM::Simulation * s, QVector<ModelNode 
         QString name = QString::fromStdString(it->first);
         int type = it->second;
 
-        if (type == DM::VIBe2::DOUBLEDATA_IN) {
+        if (type == DM::DOUBLEDATA_IN) {
             //module.inputDouble.append(name);
         }
-        if (type == DM::VIBe2::DOUBLEDATA_OUT) {
+        if (type == DM::DOUBLEDATA_OUT) {
             //module.outputDouble.append(name);
         }
 

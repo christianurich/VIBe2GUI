@@ -77,7 +77,7 @@ GUIModelNode::GUIModelNode(DM::Module * m, ModelNode *mn, QWidget* parent) :QWid
     std::vector<std::string> NameList = m->getParameterListAsVector();
     BOOST_FOREACH(std::string name, NameList){
         int ID = parameter[name];//it->second;
-        if (ID == DM::VIBe2::DOUBLE || ID == DM::VIBe2::LONG || ID == DM::VIBe2::INT) {
+        if (ID == DM::DOUBLE || ID == DM::LONG || ID == DM::INT) {
             QLabel * l = new QLabel;
             QLineEdit * le = new QLineEdit;
             QCheckBox * cb = new QCheckBox("from Outside");
@@ -85,11 +85,11 @@ GUIModelNode::GUIModelNode(DM::Module * m, ModelNode *mn, QWidget* parent) :QWid
             QString s  = QString().fromStdString(name);
             std::string s_tmp = name;
 
-            if (ID == DM::VIBe2::DOUBLE)
+            if (ID == DM::DOUBLE)
                 val = m->getParameter<double>(s_tmp);
-            if (ID == DM::VIBe2::LONG)
+            if (ID == DM::LONG)
                 val = m->getParameter<long>(s_tmp);
-            if (ID == DM::VIBe2::INT)
+            if (ID == DM::INT)
                 val = m->getParameter<int>(s_tmp);
 
             QString numberAsText = QString::number(val, 'g', 15);
@@ -111,7 +111,7 @@ GUIModelNode::GUIModelNode(DM::Module * m, ModelNode *mn, QWidget* parent) :QWid
             connect(cb, SIGNAL(clicked()), this, SLOT(addUserDefinedDoubleItem()));
 
         }
-        if ( ID == DM::VIBe2::BOOL) {
+        if ( ID == DM::BOOL) {
             std::string s_tmp = name;
             QString s  = QString::fromStdString(name);
             bool val  =  m->getParameter<bool>(s_tmp);
@@ -124,7 +124,7 @@ GUIModelNode::GUIModelNode(DM::Module * m, ModelNode *mn, QWidget* parent) :QWid
             layout1->addWidget(l, layout1->rowCount(),0);
             layout1->addWidget(le,layout1->rowCount()-1,1);
         }
-        if ( ID == DM::VIBe2::STRING) {
+        if ( ID == DM::STRING) {
             std::string s_tmp = name;
             QString s  = QString::fromStdString(name);
             QString val  = QString::fromStdString( m->getParameter<std::string>(s_tmp));
@@ -137,7 +137,7 @@ GUIModelNode::GUIModelNode(DM::Module * m, ModelNode *mn, QWidget* parent) :QWid
             layout1->addWidget(l, layout1->rowCount(),0);
             layout1->addWidget(le,layout1->rowCount()-1,1);
         }
-        if ( ID == DM::VIBe2::FILENAME) {
+        if ( ID == DM::FILENAME) {
             std::string s_tmp = name;
             QString s  = QString().fromStdString(name);
             QLabel * l = new QLabel;
@@ -155,7 +155,7 @@ GUIModelNode::GUIModelNode(DM::Module * m, ModelNode *mn, QWidget* parent) :QWid
             connect(pb, SIGNAL(clicked()), this, SLOT(openFileDialog()));
             connect(this, SIGNAL(selectFiles(QString)), le, SLOT(setText(QString)));
         }
-        if (ID == DM::VIBe2::STRING_MAP ) {
+        if (ID == DM::STRING_MAP ) {
             QString s  = QString().fromStdString(name);
             QGroupBox * box= new QGroupBox;
             QGridLayout * layout_grid = new QGridLayout;
@@ -191,9 +191,9 @@ GUIModelNode::GUIModelNode(DM::Module * m, ModelNode *mn, QWidget* parent) :QWid
 
         }
         if (
-                ID == DM::VIBe2::USER_DEFINED_DOUBLEDATA_IN ||
-                ID == DM::VIBe2::USER_DEFINED_DOUBLEDATA_TUPLE_OUT ||
-                ID == DM::VIBe2::USER_DEFINED_DOUBLEDATA_TUPLE_IN) {
+                ID == DM::USER_DEFINED_DOUBLEDATA_IN ||
+                ID == DM::USER_DEFINED_DOUBLEDATA_TUPLE_OUT ||
+                ID == DM::USER_DEFINED_DOUBLEDATA_TUPLE_IN) {
 
             QString s  = QString().fromStdString(name);
             if (s.compare("InputDouble") == 0)
@@ -207,18 +207,18 @@ GUIModelNode::GUIModelNode(DM::Module * m, ModelNode *mn, QWidget* parent) :QWid
             pb->setText("+");
             QString s1;
 
-            if(ID == DM::VIBe2::USER_DEFINED_DOUBLEDATA_IN)
+            if(ID == DM::USER_DEFINED_DOUBLEDATA_IN)
                 s1= "InputDouble|" + s;
-            if(ID == DM::VIBe2::USER_DEFINED_DOUBLEDATA_TUPLE_IN)
+            if(ID == DM::USER_DEFINED_DOUBLEDATA_TUPLE_IN)
                 s1= "InputTupleDouble|" + s;
-            if(ID == DM::VIBe2::USER_DEFINED_DOUBLEDATA_TUPLE_OUT)
+            if(ID == DM::USER_DEFINED_DOUBLEDATA_TUPLE_OUT)
                 s1= "OutputTupleDouble|" + s;
             layout_grid->addWidget(pb, 0,0,1,3);
             pb->setObjectName(s1);
             connect(pb, SIGNAL(clicked()), this, SLOT(addUserDefinedItem()));
             std::string stds = s.toStdString();
             QStringList ls;
-            if (ID == DM::VIBe2::USER_DEFINED_DOUBLEDATA_IN ){
+            if (ID == DM::USER_DEFINED_DOUBLEDATA_IN ){
                 std::map<std::string, double> map = m->getParameter<std::map<std::string, double> >(stds);
 
                 for (std::map<std::string, double>::const_iterator it = map.begin(); it != map.end(); ++it ) {
@@ -228,8 +228,8 @@ GUIModelNode::GUIModelNode(DM::Module * m, ModelNode *mn, QWidget* parent) :QWid
             }
 
             if (
-                    ID == DM::VIBe2::USER_DEFINED_DOUBLEDATA_TUPLE_OUT ||
-                    ID == DM::VIBe2::USER_DEFINED_DOUBLEDATA_TUPLE_IN
+                    ID == DM::USER_DEFINED_DOUBLEDATA_TUPLE_OUT ||
+                    ID == DM::USER_DEFINED_DOUBLEDATA_TUPLE_IN
                     ){
                 foreach(std::string name, m->getParameter<std::vector<std::string> >(stds)) {
                     ls.append(QString::fromStdString(name));
@@ -323,7 +323,7 @@ void GUIModelNode::addTuplePort() {
 
             DM::PortTuple * pt;
             if (TypeInfo.compare("InputTupleDouble") == 0)
-                DM::PortTuple * pt = g->addTuplePort(text.toStdString(), DM::VIBe2::INTUPLEDOUBLEDATA);
+                DM::PortTuple * pt = g->addTuplePort(text.toStdString(), DM::INTUPLEDOUBLEDATA);
             gn->addTuplePort(pt);
         }
     }
@@ -504,11 +504,11 @@ void GUIModelNode::accept() {
         std::map<std::string, std::string> map;
         switch (ID)
         {
-        case (DM::VIBe2::BOOL):
+        case (DM::BOOL):
             ab = ( QAbstractButton * ) this->elements.value(s);
             this->module->setParameterNative(s.toStdString(), ab->isChecked());
             break;
-        case (DM::VIBe2::STRING_MAP):
+        case (DM::STRING_MAP):
             le = ( QLineEdit * ) this->elements.value(s);
             map = this->module->getParameter<std::map<std::string, std::string> > (s.split("|")[0].toStdString());
             map[s.split("|")[1].toStdString()] = le->text().toStdString();

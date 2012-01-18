@@ -55,12 +55,12 @@ std::string ModelNode::getParameterAsString(std::string name) {
 
     std::ostringstream val;
     int id = this->VIBeModule->getParameterList()[name];
-    if (id == DM::VIBe2::DOUBLE || id == DM::VIBe2::LONG || id == DM::VIBe2::STRING) {
-        if (id == DM::VIBe2::DOUBLE)
+    if (id == DM::DOUBLE || id == DM::LONG || id == DM::STRING) {
+        if (id == DM::DOUBLE)
             val << this->VIBeModule->getParameter<double>(name);
-        if (id == DM::VIBe2::LONG)
+        if (id == DM::LONG)
             val << this->VIBeModule->getParameter<long>(name);
-        if (id == DM::VIBe2::STRING)
+        if (id == DM::STRING)
             val << this->VIBeModule->getParameter<std::string>(name);
         return val.str();
     }
@@ -81,7 +81,7 @@ void ModelNode::updatePorts () {
         GUIPort * gp = this->ports[i];
         if (gp->getVIBePort()->isPortTuple())
             continue;
-        if (gp->getPortType()  > DM::VIBe2::OUTPORTS ) {
+        if (gp->getPortType()  > DM::OUTPORTS ) {
             bool  portExists = false;
 
             BOOST_FOREACH (DM::Port * p, this->VIBeModule->getInPorts()){
@@ -97,7 +97,7 @@ void ModelNode::updatePorts () {
                 delete gp;
             }
         }
-        if (gp->getPortType()  < DM::VIBe2::OUTPORTS ) {
+        if (gp->getPortType()  < DM::OUTPORTS ) {
             bool  portExists = false;
 
             BOOST_FOREACH (DM::Port * p, this->VIBeModule->getOutPorts()){
@@ -141,7 +141,7 @@ void ModelNode::resetModel() {
 }
 
 void ModelNode::addPort(DM::Port * p) {
-    if (p->getPortType() < DM::VIBe2::OUTPORTS ) {
+    if (p->getPortType() < DM::OUTPORTS ) {
         foreach (QString pname, ExistingInPorts) {
             if (pname.compare(QString::fromStdString(p->getLinkedDataName())) == 0) {
                 return;
@@ -159,7 +159,7 @@ void ModelNode::addPort(DM::Port * p) {
 
     GUIPort * gui_p = new  GUIPort(this, p);
     ports.append(gui_p);
-    if  (p->getPortType() < DM::VIBe2::OUTPORTS) {
+    if  (p->getPortType() < DM::OUTPORTS) {
         gui_p->setPos(this->boundingRect().width()-gui_p->boundingRect().width(),gui_p->boundingRect().height()*this->outputCounter++);
     }else {
         gui_p->setPos(0,gui_p->boundingRect().height()*this->inputCounter++);

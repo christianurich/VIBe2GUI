@@ -29,7 +29,7 @@
 #include "compilersettings.h"
 #include <QGraphicsView>
 #include <QWidget>
-#include "moduledescription.h"
+
 
 #include <QGraphicsSceneDragDropEvent>
 #include <linknode.h>
@@ -46,8 +46,7 @@ class  VIBE_HELPER_DLL_EXPORT ProjectViewer : public QGraphicsScene
 {
 public:
     int id;
-    ProjectViewer(  QWidget * parent = 0);
-    void setModules(QMap<QString, ModuleDescription> * m) {this->modules = m;}
+    ProjectViewer(  DM::Group * g, QWidget * parent = 0);
     void addModule(ModelNode *  m);
     void setModelNodes( QVector<ModelNode * > * m) {this->mnodes = m;}
     void setGroupNodes(QVector<GroupNode * > * g) {this->gnodes = g;}
@@ -60,13 +59,14 @@ protected:
     void dragMoveEvent(QGraphicsSceneDragDropEvent *event);
 
 private:
-    QMap<QString, ModuleDescription> * modules;
     QVector<ModelNode* > * mnodes;
     QVector<GroupNode* > * gnodes;
-    //Groups * groups;
+
     DM::ModuleRegistry * moduleregistry;
     DM::Simulation * simulation;
     MainWindow * ResultViewer;
+
+    DM::Group * group;
 
 };
 

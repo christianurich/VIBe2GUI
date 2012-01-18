@@ -149,7 +149,7 @@ MainWindow::MainWindow(QWidget * parent)
     this->simulation = new DM::Simulation();
     this->simulation->registerDataBase(this->database);
 
-    this->scene = new ProjectViewer();
+    this->scene = new ProjectViewer((DM::Group *)this->simulation->getRootGroup());
     this->scene->setSimulation(this->simulation);
     this->scene->setResultViewer(this);
 
@@ -204,7 +204,7 @@ MainWindow::MainWindow(QWidget * parent)
     this->modelTree->addTopLevelItem(this->rootItemModelTree);
     this->modelTree->headerItem()->setText(0, "Module");
     this->modelTree->headerItem()->setText(1, "");
-    this->scene->setModules(& this->modules);
+    //this->scene->setModules(& this->modules);
     this->scene->setModelNodes(this->mnodes);
     this->scene->setGroupNodes(this->gnodes);
     //this->scene->setModuleRegistry(& this->registry);

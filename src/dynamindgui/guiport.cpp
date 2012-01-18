@@ -67,9 +67,9 @@ GUIPort::GUIPort(ModelNode *modelNode, DM::Port *p) : QGraphicsItem(modelNode)
     this->PortType = p->getPortType();
     this->simpleTextItem = new QGraphicsSimpleTextItem (QString::fromStdString(p->getLinkedDataName()));
 
-    if (p->getPortType() == DM::VIBe2::INSYSTEM || p->getPortType() == DM::VIBe2::OUTSYSTEM)
+    if (p->getPortType() == DM::INSYSTEM || p->getPortType() == DM::OUTSYSTEM)
         color = COLOR_VECTORPORT;
-    if (p->getPortType() == DM::VIBe2::INDOUBLEDATA || p->getPortType() == DM::VIBe2::OUTDOUBLEDATA)
+    if (p->getPortType() == DM::INDOUBLEDATA || p->getPortType() == DM::OUTDOUBLEDATA)
         color = COLOR_DOUBLEPORT
                 hoverElement = 0;
 
@@ -93,7 +93,7 @@ void GUIPort::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, Q
         l = this->simpleTextItem->boundingRect().width()+4;
         h = this->simpleTextItem->boundingRect().height()+4;
         x1 = 0;
-        if (this->p->getPortType() > DM::VIBe2::OUTPORTS)
+        if (this->p->getPortType() > DM::OUTPORTS)
             x1 = -l+14;
         QPainterPath path;
         QPen pen(Qt::black, 1.5, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
@@ -133,15 +133,15 @@ QRectF GUIPort::boundingRect() const {
 void GUIPort::hoverEnterEvent ( QGraphicsSceneHoverEvent * event ) {
     this->isHover = true;
 
-    if (this->p->getPortType() == DM::VIBe2::INSYSTEM|| this->p->getPortType() == DM::VIBe2::OUTSYSTEM)
+    if (this->p->getPortType() == DM::INSYSTEM|| this->p->getPortType() == DM::OUTSYSTEM)
         color = COLOR_VECTORPORT;
-    if (p->getPortType() == DM::VIBe2::INDOUBLEDATA || p->getPortType() == DM::VIBe2::OUTDOUBLEDATA)
+    if (p->getPortType() == DM::INDOUBLEDATA || p->getPortType() == DM::OUTDOUBLEDATA)
         color = COLOR_DOUBLEPORT
                 prepareGeometryChange ();
     l = this->simpleTextItem->boundingRect().width()+4;
     h = this->simpleTextItem->boundingRect().height()+4;
     x1 = 0;
-    if (p->getPortType()  > DM::VIBe2::OUTPORTS  )
+    if (p->getPortType()  > DM::OUTPORTS  )
         x1 = -l+14;
     this->update(this->boundingRect());
 }
@@ -150,9 +150,9 @@ void GUIPort::hoverLeaveEvent ( QGraphicsSceneHoverEvent * event ) {
     this->isHover = false;
     if (!LinkMode) {
 
-        if (p->getPortType()  == DM::VIBe2::INSYSTEM || p->getPortType()  == DM::VIBe2::OUTSYSTEM)
+        if (p->getPortType()  == DM::INSYSTEM || p->getPortType()  == DM::OUTSYSTEM)
             color = COLOR_VECTORPORT;
-        if (p->getPortType() == DM::VIBe2::INDOUBLEDATA || p->getPortType() == DM::VIBe2::OUTDOUBLEDATA)
+        if (p->getPortType() == DM::INDOUBLEDATA || p->getPortType() == DM::OUTDOUBLEDATA)
             color = COLOR_DOUBLEPORT
     }
     prepareGeometryChange ();
@@ -180,14 +180,14 @@ void GUIPort::mouseMoveEvent ( QGraphicsSceneMouseEvent * event )  {
         if ( this->type() == item->type() ) {
             GUIPort * link  = (GUIPort *) item;
 
-            if (getPortType() == DM::VIBe2::OUTSYSTEM &&  link->getPortType() == DM::VIBe2::INSYSTEM ) {
+            if (getPortType() == DM::OUTSYSTEM &&  link->getPortType() == DM::INSYSTEM ) {
                 link->setHover(true);
                 link->prepareGeometryChange();
                 link->update();
                 this->hoverElement = link;
                 setHover = true;
             }
-            if (getPortType() == DM::VIBe2::OUTDOUBLEDATA &&  link->getPortType() == DM::VIBe2::INDOUBLEDATA ) {
+            if (getPortType() == DM::OUTDOUBLEDATA &&  link->getPortType() == DM::INDOUBLEDATA ) {
                 link->setHover(true);
                 link->prepareGeometryChange();
                 link->update();
@@ -208,13 +208,13 @@ void GUIPort::mouseMoveEvent ( QGraphicsSceneMouseEvent * event )  {
 
 void GUIPort::mousePressEvent ( QGraphicsSceneMouseEvent * event )  {
 
-    if (getPortType() == DM::VIBe2::INSYSTEM || getPortType() == DM::VIBe2::OUTSYSTEM )
+    if (getPortType() == DM::INSYSTEM || getPortType() == DM::OUTSYSTEM )
         color = COLOR_VECTORPORT;
-    if (p->getPortType() == DM::VIBe2::INDOUBLEDATA || p->getPortType() == DM::VIBe2::OUTDOUBLEDATA)
+    if (p->getPortType() == DM::INDOUBLEDATA || p->getPortType() == DM::OUTDOUBLEDATA)
         color = COLOR_DOUBLEPORT
 
 
-                if (getPortType() < DM::VIBe2::OUTPORTS) {
+                if (getPortType() < DM::OUTPORTS) {
             LinkMode = true;
             this->tmp_link = new GUILink();
             this->tmp_link->setOutPort(this);
@@ -228,10 +228,10 @@ DM::Port * GUIPort::getVIBePort() {
 
 void GUIPort::mouseReleaseEvent ( QGraphicsSceneMouseEvent * event ) {
     std::cout << "mouseReleaseEvent " << std::endl;
-    if (getPortType() < DM::VIBe2::OUTPORTS) {
+    if (getPortType() < DM::OUTPORTS) {
         LinkMode = false;
 
-        if (getPortType()  == DM::VIBe2::INSYSTEM)
+        if (getPortType()  == DM::INSYSTEM)
             color = COLOR_VECTORPORT;
 
         this->update(this->boundingRect());
@@ -241,7 +241,7 @@ void GUIPort::mouseReleaseEvent ( QGraphicsSceneMouseEvent * event ) {
             if ( this->type() == item->type() ) {
                 GUIPort * endLink  = (GUIPort *) item;
 
-                if (getPortType() == DM::VIBe2::OUTSYSTEM &&  endLink->getPortType() == DM::VIBe2::INSYSTEM ) {
+                if (getPortType() == DM::OUTSYSTEM &&  endLink->getPortType() == DM::INSYSTEM ) {
                     this->tmp_link->setInPort(endLink);
                     //this->links.append(tmp_link);
                     //Create Link
@@ -257,7 +257,7 @@ void GUIPort::mouseReleaseEvent ( QGraphicsSceneMouseEvent * event ) {
 
 
                 }
-                if (getPortType() == DM::VIBe2::OUTDOUBLEDATA &&  endLink->getPortType() == DM::VIBe2::INDOUBLEDATA ) {
+                if (getPortType() == DM::OUTDOUBLEDATA &&  endLink->getPortType() == DM::INDOUBLEDATA ) {
                     this->tmp_link->setInPort(endLink);
                     //this->links.append(tmp_link);
                     //Create Link
