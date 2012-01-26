@@ -48,7 +48,7 @@ class  VIBE_HELPER_DLL_EXPORT SimulationIO  : public QXmlDefaultHandler
 public:
     SimulationIO();
     //static void writeSimulation(QString FileName, QMap<QString, ModuleDescription> & modules,  QVector<ModelNode * > * mnodes);
-    void loadSimluation(QString FileName,  DM::Simulation *simulation,  std::map<std::string, std::string> UUIDTranslation, QVector<ModelNode * > * mnodes);
+    void loadSimluation(QString FileName,  GUISimulation *simulation,  std::map<std::string, std::string> UUIDTranslation, QVector<ModelNode * > * mnodes);
     QVector<ModelNode * > * getModelNodes(){return this->mnodes;}
     QVector<LoadLink> getLinks(){return this->links;}
 
@@ -69,7 +69,7 @@ private:
 
     QVector<LoadLink> links;
     std::map<std::string, std::string> UUIDTransation;
-    DM::Simulation * sim;
+    GUISimulation * sim;
     std::string tmpUUID;
     double PosX;
     double PosY;

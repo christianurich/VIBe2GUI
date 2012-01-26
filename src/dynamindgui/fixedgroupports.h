@@ -24,13 +24,19 @@
  *
  */
 
-#include "guisimulationobserver.h"
+#ifndef FIXEDGROUPPORTS_H
+#define FIXEDGROUPPORTS_H
 
-GUISimulationObserver::GUISimulationObserver(ProjectViewer * pv)
+#include <QGraphicsItem>
+
+class FixedGroupPorts : public QGraphicsItem
+
 {
-    this->pv = pv;
-}
+public:
+    FixedGroupPorts();
 
-void GUISimulationObserver::VirtualRunDone() {
-    pv->update();
-}
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
+    QRectF boundingRect() const;
+};
+
+#endif // FIXEDGROUPPORTS_H

@@ -54,10 +54,9 @@ class GroupNode;
 class GuiLogSink;
 class DMDatabase;
 class GUISimulationObserver;
-
+class GUISimulation;
 namespace DM {
-
-    class Simulation;
+    class Group;
 }
 
 
@@ -68,11 +67,11 @@ class VIBE_HELPER_DLL_EXPORT MainWindow : public QMainWindow, public Ui::MainWin
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
-    ProjectViewer * getProjectViewer() {return this->scene;}
+    //ProjectViewer * getProjectViewer() {return this->scene;}
     QTreeWidgetItem * getRootItemModelTree(){return this->rootItemModelTree;}
     GuiLogSink *log_updater;
 private:
-    DM::Simulation * simulation;
+    GUISimulation * simulation;
     DMDatabase * database;
     DataManagment * data;
     SimulationManagment * simmanagment;
@@ -82,7 +81,7 @@ private:
     QMap<QString, ModuleDescription> modules;
     QVector<ModelNode * > * mnodes;
     QVector<GroupNode * > * gnodes;
-    ProjectViewer * scene;
+    QVector<ProjectViewer * >  groupscenes;
     QString currentDocument;
     int counter;
     bool running;
@@ -111,6 +110,7 @@ public slots:
     void SimulationFinished();
     void startEditor();
     void ReloadSimulation();
+    void addNewGroupWindows(GroupNode *);
 
 
 private slots:

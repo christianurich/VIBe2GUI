@@ -50,6 +50,7 @@
 #include <modelnode.h>
 #include "datamanagment.h"
 #include <module.h>
+#include <group.h>
 #include <boost/foreach.hpp>
 #include <simulation.h>
 #include <dmdatabase.h>
@@ -64,6 +65,7 @@
 #include <plot.h>
 #include <pythonenv.h>
 #include <guisimulationobserver.h>
+#include <guisimulation.h>
 
 using namespace boost;
 void outcallback( const char* ptr, std::streamsize count, void* pTextBox )
@@ -128,6 +130,26 @@ void MainWindow::ReloadSimulation() {
 void MainWindow::startEditor() {
     DM::PythonEnv::getInstance()->startEditra();
 }
+void MainWindow::addNewGroupWindows(GroupNode * g) {
+
+    ProjectViewer * newgroup = new ProjectViewer(g );
+
+    this->simulation->addSimulationObserver(new GUISimulationObserver(newgroup));
+
+    connect(simulation, SIGNAL(addedGroup(GroupNode*)), newgroup, SLOT(addGroup(GroupNode*)));
+    connect(simulation, SIGNAL(addedModule(ModelNode*)), newgroup, SLOT(addModule(ModelNode*)));
+    connect(newgroup, SIGNAL(NewModule(QString,QPointF)), simulation, SLOT(GUIaddModule(QString,QPointF)));
+
+    newgroup->setResultViewer(this);
+    this->groupscenes << newgroup;
+
+
+    QGraphicsView * gv = new QGraphicsView(newgroup);
+    gv->setAcceptDrops(true);
+
+    this->tabWidget_4->addTab(gv,g->getName());
+
+}
 
 MainWindow::MainWindow(QWidget * parent)
 {
@@ -144,14 +166,19 @@ MainWindow::MainWindow(QWidget * parent)
     DM::DataManagement::getInstance().registerDataBase(this->database);
     DM::PythonEnv *env = DM::PythonEnv::getInstance();
 
+
+
     //this->graphicsView->setViewport(new QGLWidget());
 
-    this->simulation = new DM::Simulation();
+    this->simulation = new GUISimulation();
+    connect(this->simulation, SIGNAL(addedGroup(GroupNode*)), this, SLOT(addNewGroupWindows(GroupNode*)));
+    this->simulation->registerRootNode();
     this->simulation->registerDataBase(this->database);
 
-    this->scene = new ProjectViewer((DM::Group *)this->simulation->getRootGroup());
-    this->scene->setSimulation(this->simulation);
-    this->scene->setResultViewer(this);
+
+
+    //addNewGroup((DM::Group*)this->simulation->getRootGroup());
+
 
     this->mnodes = new QVector<ModelNode*>();
     this->gnodes = new QVector<GroupNode*>();
@@ -182,9 +209,9 @@ MainWindow::MainWindow(QWidget * parent)
         counter++;
         this->preferences();
     }
-    this->simobserver = new GUISimulationObserver(this->scene);
 
-    this->simulation->addSimulationObserver(this->simobserver );
+
+    //this->simulation->addSimulationObserver(this->simobserver );
 
     this->simmanagment = new SimulationManagment();
 
@@ -205,11 +232,11 @@ MainWindow::MainWindow(QWidget * parent)
     this->modelTree->headerItem()->setText(0, "Module");
     this->modelTree->headerItem()->setText(1, "");
     //this->scene->setModules(& this->modules);
-    this->scene->setModelNodes(this->mnodes);
-    this->scene->setGroupNodes(this->gnodes);
+    //this->scene->setModelNodes(this->mnodes);
+    //this->scene->setGroupNodes(this->gnodes);
     //this->scene->setModuleRegistry(& this->registry);
-    this->graphicsView->setScene(scene);
-    this->graphicsView->setAcceptDrops(true);
+    //this->graphicsView->setScene(root);
+    //this->graphicsView->setAcceptDrops(true);
 
     // this->points = new QwtPlotMarker();
     // this->points->attach(this->PlotWindow);
@@ -254,7 +281,7 @@ void MainWindow::createModuleListView() {
     //Add VIBe Modules
     QStringList filters;
     filters << "*.vib";
-   QSettings settings("IUT", "DYNAMIND");
+    QSettings settings("IUT", "DYNAMIND");
     QStringList moduleshome = settings.value("VIBeModules",QStringList()).toString().replace("\\","/").split(",");
     for (int index = 0; index < moduleshome.size(); index++) {
         QDir d = QDir(moduleshome[index]);
@@ -308,7 +335,7 @@ void MainWindow::runSimulation() {
         ModelNode * m = this->mnodes->at(i);
         m->resetModel();
     }
-    connect(simulation, SIGNAL(finished()), this , SLOT(SimulationFinished()), Qt::DirectConnection);
+    //connect(simobserver, SIGNAL(finished()), this , SLOT(SimulationFinished()), Qt::DirectConnection);
     simulation->run();
 
     return;
@@ -455,7 +482,8 @@ void MainWindow::importSimulation(QString fileName, QPointF offset) {
 
 
             std::string GroupUUID = module->getVIBeModel()->getGroup()->getUuid();
-            this->scene->addItem(module);
+            //Implement new
+            /*this->scene->addItem(module);
             foreach (ModelNode * m, new_modules) {
                 if (m->getVIBeModel()->isGroup()) {
                     if (m->getVIBeModel()->getUuid().compare(GroupUUID) == 0) {
@@ -468,7 +496,7 @@ void MainWindow::importSimulation(QString fileName, QPointF offset) {
             }
             module->setPos(module->pos()+offset);
             DM::Logger(DM::Debug) << module->pos().x();
-            module->updatePorts();
+            module->updatePorts();*/
 
 
         }
@@ -499,7 +527,7 @@ void MainWindow::importSimulation(QString fileName, QPointF offset) {
                 gui_link->setInPort(inmodule->getGUIPort(l->getInPort()));
                 gui_link->setVIBeLink(l);
                 gui_link->setSimulation(this->simulation);
-                this->scene->addItem(gui_link);
+                //this->scene->addItem(gui_link);
             }
 
 
@@ -518,7 +546,7 @@ void MainWindow::importSimulation(QString fileName, QPointF offset) {
     }
 
 
-    this->scene->update();
+    //this->scene->update();
 
 
 }
@@ -540,7 +568,7 @@ void MainWindow::loadSimulation(int id) {
             module->setResultWidget(this);
 
             std::string GroupUUID = module->getVIBeModel()->getGroup()->getUuid();
-            this->scene->addItem(module);
+            //this->scene->addItem(module);
             foreach (ModelNode * m, *(this->mnodes)) {
                 if (m->getVIBeModel()->isGroup()) {
                     if (m->getVIBeModel()->getUuid().compare(GroupUUID) == 0) {
@@ -578,7 +606,7 @@ void MainWindow::loadSimulation(int id) {
             gui_link->setInPort(inmodule->getGUIPort(l->getInPort()));
             gui_link->setVIBeLink(l);
             gui_link->setSimulation(this->simulation);
-            this->scene->addItem(gui_link);
+            //this->scene->addItem(gui_link);
 
         }
     }
@@ -594,7 +622,7 @@ void MainWindow::loadSimulation(int id) {
     }
 
 
-    this->scene->update();
+    //this->scene->update();
 
 }
 MainWindow::~MainWindow() {
@@ -602,14 +630,14 @@ MainWindow::~MainWindow() {
         ModelNode * m = mnodes->at(i);
         delete m;
     }
-    delete this->scene;
+    //delete this->scene;
     delete this->mnodes;
     delete this->simulation;
 }
 
 void MainWindow::on_actionZoomIn_activated()
 {
-    QWidget * view = (QWidget *)   this->tabWidget_2->currentWidget();
+    /*QWidget * view = (QWidget *)   this->tabWidget_2->currentWidget();
     if (view->objectName().compare("Model_View") == 0){
         graphicsView->scale(1.2, 1.2);
         return;
@@ -621,12 +649,12 @@ void MainWindow::on_actionZoomIn_activated()
         GUIImageResultView * v = ( GUIImageResultView *) view;
         v->getView()->scale(1.2, 1.2);
         return;
-    }
+    }*/
 }
 
 void MainWindow::on_actionZoomOut_activated()
 {
-    QWidget * view = (QWidget *)   this->tabWidget_2->currentWidget();
+    /*QWidget * view = (QWidget *)   this->tabWidget_2->currentWidget();
     if (view->objectName().compare("Model_View") == 0){
         graphicsView->scale(0.8, 0.8);
         return;
@@ -639,12 +667,12 @@ void MainWindow::on_actionZoomOut_activated()
         GUIImageResultView * v = ( GUIImageResultView *) view;
         v->getView()->scale(0.8, 0.8);
         return;
-    }
+    }*/
 }
 
 void MainWindow::on_actionZoomReset_activated()
 {
-    QWidget * view = (QWidget *)   this->tabWidget_2->currentWidget();
+    /*QWidget * view = (QWidget *)   this->tabWidget_2->currentWidget();
     if (view->objectName().compare("Model_View") == 0){
         graphicsView->fitInView(graphicsView->sceneRect(), Qt::KeepAspectRatio);
         return;
@@ -656,6 +684,6 @@ void MainWindow::on_actionZoomReset_activated()
         GUIImageResultView * v = ( GUIImageResultView *) view;
         v->getView()->fitInView(graphicsView->sceneRect(), Qt::KeepAspectRatio);
         return;
-    }
+    }*/
 
 }

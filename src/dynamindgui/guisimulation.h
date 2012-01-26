@@ -24,13 +24,34 @@
  *
  */
 
-#include "guisimulationobserver.h"
+#ifndef GUISIMULATION_H
+#define GUISIMULATION_H
 
-GUISimulationObserver::GUISimulationObserver(ProjectViewer * pv)
+#include <simulation.h>
+#include <QVector>
+#include <QString>
+#include <QPointF>
+
+class ModelNode;
+class GroupNode;
+class GUISimulation :  public DM::Simulation
 {
-    this->pv = pv;
-}
+    Q_OBJECT
+public:
+    GUISimulation();
+    void registerRootNode();
 
-void GUISimulationObserver::VirtualRunDone() {
-    pv->update();
-}
+private:
+    QVector<ModelNode*> modelNodes;
+    QVector<GroupNode*> groupNodes;
+
+signals:
+    void addedModule(ModelNode*);
+    void addedGroup(GroupNode*);
+
+public slots:
+    void GUIaddModule( QString  name, QPointF pos);
+    void GUIaddModule(DM::Module *, QPointF pos);
+};
+
+#endif // GUISIMULATION_H

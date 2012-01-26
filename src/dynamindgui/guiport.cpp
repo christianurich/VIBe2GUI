@@ -31,7 +31,7 @@
 #include <QGraphicsSceneMouseEvent>
 #include <simulation.h>
 #include <modulelink.h>
-
+#include <guisimulation.h>
 GUIPort::~GUIPort () {
     foreach(GUILink *l, this->links) {
         delete l;
@@ -252,7 +252,7 @@ void GUIPort::mouseReleaseEvent ( QGraphicsSceneMouseEvent * event ) {
 
                     //Run Simulation
 
-                    this->modelNode->getSimulation()->run(true, false);
+                    //this->modelNode->getSimulation()->run(true, false);
 
 
 

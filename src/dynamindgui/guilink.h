@@ -35,6 +35,7 @@
 
 #include "compilersettings.h"
 class GUIPort;
+class GUISimulation;
 
 class  VIBE_HELPER_DLL_EXPORT GUILink : public QObject, public QGraphicsItem
 {
@@ -50,7 +51,7 @@ private:
     QPointF source, sink;
     bool hovered;
     DM::ModuleLink * VIBelink;
-    DM::Simulation * sim;
+    GUISimulation * sim;
 
 
 protected:
@@ -70,7 +71,7 @@ public:
     GUIPort * getInPort(){return inPort;}
     bool isBack(){return this->VIBelink->isBackLink();}
     void setBack(bool b){this->VIBelink->setBackLink(b);}
-    void setSimulation(DM::Simulation * sim) {this->sim = sim;}
+    void setSimulation(GUISimulation * sim) {this->sim = sim;}
     void setVIBeLink(DM::ModuleLink * link){this->VIBelink = link;}
     ~GUILink();
 

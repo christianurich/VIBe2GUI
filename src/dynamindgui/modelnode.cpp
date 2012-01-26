@@ -46,7 +46,7 @@
 #include <QApplication>
 #include <QInputDialog>
 #include <groupnode.h>
-
+#include <guisimulation.h>
 #include <DMcomponent.h>
 #include <DMsystem.h>
 
@@ -177,12 +177,11 @@ void ModelNode::addPort(DM::Port * p) {
 
 //ModelNode
 
-ModelNode::ModelNode( DM::Module * VIBeModule, DM::Simulation * simulation, QVector<ModelNode * > * modelnodes, MainWindow * widget)
+ModelNode::ModelNode( DM::Module *VIBeModule,GUISimulation * simulation)
 {
-    this->ResultWidget = widget;
     this->guiPortObserver.setModelNode(this);
     this->guiResultObserver.setResultWidget(this->ResultWidget);
-    VIBeModule->addResultObserver(& this->guiResultObserver);
+    //VIBeModule->addResultObserver(& this->guiResultObserver);
     this->minimized = false;
     this->visible = true;
     this->setParentItem(0);
@@ -192,7 +191,8 @@ ModelNode::ModelNode( DM::Module * VIBeModule, DM::Simulation * simulation, QVec
     this->VIBeModule = VIBeModule;
     this->id = VIBeModule->getID();
     this->simulation = simulation;
-    this->nodes = modelnodes;
+    this->nodes = 0;
+
     this->setFlag(QGraphicsItem::ItemIsSelectable, true);
     this->setFlag(QGraphicsItem::ItemIsMovable, true);
     this->setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
@@ -400,13 +400,13 @@ void ModelNode::addGroup() {
 
         return;
     }
-    foreach (ModelNode * m, *(this->nodes)) {
+    /*foreach (ModelNode * m, *(this->nodes)) {
         if (m->getVIBeModel()->isGroup()) {
             if (name.compare(QString::fromStdString(m->getVIBeModel()->getUuid())) == 0) {
                 gn = (GroupNode * ) m;
             }
         }
-    }
+    }*/
 
     this->parentGroup = gn;
     gn->addModelNode(this);

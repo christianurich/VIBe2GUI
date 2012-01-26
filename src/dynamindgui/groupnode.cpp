@@ -192,7 +192,7 @@ void GroupNode::removeTuplePort(int Type, QString s) {
 
 }
 
-GroupNode::GroupNode( DM::Module *module, DM::Simulation * s, QVector<ModelNode * > * modelnodes, MainWindow * widget): ModelNode( module, s, modelnodes,widget)
+GroupNode::GroupNode(  DM::Module *module, GUISimulation * s): ModelNode( module, s)
 {
 
     this->childnodes = QVector<ModelNode*>();

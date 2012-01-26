@@ -49,6 +49,7 @@
 class ModelNodeButton;
 class GroupNode;
 class GUIPort;
+class GUISimulation;
 class  VIBE_HELPER_DLL_EXPORT ModelNode : public  QObject, public QGraphicsItem
 {
     Q_OBJECT
@@ -82,14 +83,14 @@ protected:
     virtual void mouseDoubleClickEvent ( QGraphicsSceneMouseEvent * event );
     virtual void mousePressEvent ( QGraphicsSceneMouseEvent * event );
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
-    DM::Simulation * simulation;
+    GUISimulation * simulation;
     MainWindow * ResultWidget;
 
 public:
     QStringList ExistingInPorts;
     QStringList ExistingOutPorts;
     ModelNode(QGraphicsItem * parent = 0, QGraphicsScene * scene = 0);
-    ModelNode( DM::Module * VIBeModule, DM::Simulation *simulation, QVector<ModelNode * > * modelnodes, MainWindow * resultWidget);
+    ModelNode(DM::Module *VIBeModule, GUISimulation *simulation);
 
     int type() const {return Type; }
     virtual ~ModelNode();
@@ -125,7 +126,7 @@ public:
     QRectF boundingRect() const;
 
     DM::Module * getVIBeModel(){return this->VIBeModule;}
-    DM::Simulation * getSimulation() {return this->simulation;}
+    GUISimulation * getSimulation() {return this->simulation;}
 
 
     virtual void updatePorts();

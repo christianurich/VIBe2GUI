@@ -9,7 +9,7 @@ INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
 
 
 include_directories(.)
-set(MOC_FILES  guilogsink.h  mainwindow.h plot.h preferences.h guimodelnode.h modelnode.h guilink.h StdRedirector.h application.h modelnodebutton.h simulationmanagment.h groupnode.h guiresultobserver.h guiimageresultview.h guidataobserver.h)
+set(MOC_FILES  projectviewer.h guisimulation.h guilogsink.h  mainwindow.h plot.h preferences.h guimodelnode.h modelnode.h guilink.h StdRedirector.h application.h modelnodebutton.h simulationmanagment.h groupnode.h guiresultobserver.h guiimageresultview.h guidataobserver.h)
 file (GLOB CPP_GUI_FILES *.cpp)
 file (GLOB UI_FILES *.ui)
 

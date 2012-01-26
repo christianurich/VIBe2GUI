@@ -42,31 +42,43 @@ class ModelNode;
 class GroupNode;
 
 
-class  VIBE_HELPER_DLL_EXPORT ProjectViewer : public QGraphicsScene
+class  VIBE_HELPER_DLL_EXPORT ProjectViewer :public QGraphicsScene
 {
+    Q_OBJECT
 public:
     int id;
-    ProjectViewer(  DM::Group * g, QWidget * parent = 0);
-    void addModule(ModelNode *  m);
-    void setModelNodes( QVector<ModelNode * > * m) {this->mnodes = m;}
-    void setGroupNodes(QVector<GroupNode * > * g) {this->gnodes = g;}
+    ProjectViewer(  GroupNode * g, QWidget * parent = 0);
     void setResultViewer(MainWindow * w){this->ResultViewer = w;}
-    void setSimulation(DM::Simulation * simulation){this->simulation = simulation;}
+    //void setSimulation(GUISimulation * simulation){this->simulation = simulation;}
+
+    ~ProjectViewer(){}
 
 
 protected:
     void dropEvent(QGraphicsSceneDragDropEvent *event);
     void dragMoveEvent(QGraphicsSceneDragDropEvent *event);
 
+
+
 private:
-    QVector<ModelNode* > * mnodes;
-    QVector<GroupNode* > * gnodes;
+    QVector<ModelNode* >  mnodes;
+    QVector<GroupNode* >  gnodes;
+
+
 
     DM::ModuleRegistry * moduleregistry;
-    DM::Simulation * simulation;
+    //GUISimulation * simulation;
     MainWindow * ResultViewer;
 
-    DM::Group * group;
+    GroupNode * rootGroup;
+
+ signals:
+    void NewGroupAdded(GroupNode  *);
+    void NewModule(QString name, QPointF pos);
+
+public slots:
+    void addModule(ModelNode *m);
+    void addGroup(GroupNode* m);
 
 };
 

@@ -36,12 +36,13 @@
 #include <QByteArray>
 #include <map>
 #include <groupnode.h>
+#include <guisimulation.h>
 
 SimulationIO::SimulationIO()
 {
 }
 
-void SimulationIO::loadSimluation(QString FileName,   DM::Simulation *simulation,  std::map<std::string, std::string> UUIDTranslation, QVector<ModelNode * > * mnodes)
+void SimulationIO::loadSimluation(QString FileName,  GUISimulation *simulation,  std::map<std::string, std::string> UUIDTranslation, QVector<ModelNode * > * mnodes)
 {
 
     this->sim = simulation;
@@ -102,9 +103,9 @@ bool SimulationIO::endElement(const QString & namespaceURI,
         if (VIBe2m != 0) {
             ModelNode * m;
             if (!VIBe2m->isGroup())
-                m = new ModelNode(VIBe2m, sim, mnodes, 0);
+                m = new ModelNode(VIBe2m, sim);
             if (VIBe2m->isGroup())
-                m = new GroupNode(VIBe2m, sim, mnodes, 0);
+                m = new GroupNode(VIBe2m, sim);
             mnodes->append(m);
             m->setPos(PosX, PosY);
             m->setMinimized(minimized);

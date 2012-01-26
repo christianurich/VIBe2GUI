@@ -34,20 +34,36 @@
 #include <modelnode.h>
 #include <groupnode.h>
 #include <sstream>
+#include <fixedgroupports.h>
+#include <guisimulation.h>
 
 using namespace boost;
-ProjectViewer::ProjectViewer( DM::Group *g, QWidget *parent) : QGraphicsScene(parent)
+ProjectViewer::ProjectViewer( GroupNode *g,  QWidget *parent) : QGraphicsScene(parent)
+
 {
+
     this->setItemIndexMethod(QGraphicsScene::NoIndex);
     this->id = 0;
-    this->mnodes = mnodes;
-    this->group = g;
+    this->mnodes;
+
+
+
+    this->rootGroup = g;
+    /*if (g == g->getSimulation()->getRootGroup()) {
+       return;
+    }*/
+
 
 }
 
 void ProjectViewer::addModule(ModelNode *m)
 {
-    //this->addItem(m);
+    this->addItem(m);
+}
+
+void ProjectViewer::addGroup(GroupNode *g) {
+    this->addItem(g);
+
 }
 
 void ProjectViewer::dragMoveEvent(QGraphicsSceneDragDropEvent *event)
@@ -62,32 +78,12 @@ void ProjectViewer::dropEvent(QGraphicsSceneDragDropEvent *event)
     std::stringstream ss;
     QTreeWidget * lw = (QTreeWidget*) event->source();
     //lw->currentItem()->text()
-    std::string module =  lw->currentItem()->text(0).toStdString();
+    QString classname =  lw->currentItem()->text(0);
     std::string type = lw->currentItem()->text(1).toStdString();
     if (type.compare("Module") == 0) {
-        ss << module << "_" << this->id++;
-        DM::Module * mvibe= this->simulation->addModule(module);
+        //ss << module << "_" << this->id++;
+        emit NewModule(classname, event->scenePos());
 
-        if(!mvibe)
-            return;
-
-        mvibe->setName(ss.str());
-
-        ModelNode * node = 0;
-        if (!mvibe->isGroup()) {
-            node = new ModelNode( mvibe, this->simulation, this->mnodes,  this->ResultViewer);
-
-
-        }
-        if (mvibe->isGroup()) {
-            node = new GroupNode(mvibe, this->simulation, this->mnodes, this->ResultViewer);
-        }
-        this->mnodes->append(node);
-        node->setPos(event->scenePos());
-        this->addItem(node);
-
-        //Update simulation after module is added
-        this->simulation->run(true);
 
     } else {
         this->ResultViewer->importSimulation( lw->currentItem()->text(2), event->scenePos());

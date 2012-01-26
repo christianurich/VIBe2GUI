@@ -31,7 +31,6 @@
 #include "compilersettings.h"
 namespace DM {
     class Module;
-    class Simulation;
     class PortTuple;
 }
 
@@ -64,7 +63,7 @@ public:
     virtual ~GroupNode();
     void addTuplePort(DM::PortTuple * p);
     void removeTuplePort(int Type, QString s);
-    GroupNode( DM::Module * module, DM::Simulation * s, QVector<ModelNode * > * modelnodes, MainWindow * resultWidget);
+    GroupNode( DM::Module *module, GUISimulation * s);
      virtual GUIPort * getGUIPort(DM::Port * p);
     /*QVector<LinkNodeTuple * > getInputTupleRaster(){return this->InputTupleRaster;}
     QVector<LinkNodeTuple * > getOutputTupleRaster(){return this->OutputTupleRaster;}

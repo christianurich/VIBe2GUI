@@ -30,6 +30,7 @@
 #include <QAction>
 #include <QGraphicsSceneContextMenuEvent>
 #include <guiport.h>
+#include <guisimulation.h>
 
 GUILink::GUILink(){
 
