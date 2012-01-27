@@ -23,8 +23,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
  */
-#ifndef GROUPNODE_H
-#define GROUPNODE_H
+#ifndef ROOTGROUPNODE_H
+#define ROOTGROUPNODE_H
 
 #include <modelnode.h>
 #include <moduledescription.h>
@@ -36,12 +36,9 @@ namespace DM {
 
 class LinkNode;
 struct LinkNodeTuple;
-struct GUIPortTuple {
-    GUIPort * inPort;
-    GUIPort * outPort;
-};
+struct GUIPortTuple;
 
-class VIBE_HELPER_DLL_EXPORT  GroupNode : public ModelNode
+class VIBE_HELPER_DLL_EXPORT  RootGroupNode : public ModelNode
 {
     Q_OBJECT
 
@@ -55,16 +52,22 @@ private:
     std::string name;
     QVector<ModelNode * > childnodes;
 
-
+protected:
+    virtual void mouseMoveEvent ( QGraphicsSceneMouseEvent * event ) ;
 
 public:
-    GroupNode();
-    virtual ~GroupNode();
+    RootGroupNode();
+    virtual ~RootGroupNode();
     void addTuplePort(DM::PortTuple * p);
     void removeTuplePort(int Type, QString s);
-    GroupNode( DM::Module *module, GUISimulation * s);
+    RootGroupNode( DM::Module *module, GUISimulation * s);
      virtual GUIPort * getGUIPort(DM::Port * p);
-
+    /*QVector<LinkNodeTuple * > getInputTupleRaster(){return this->InputTupleRaster;}
+    QVector<LinkNodeTuple * > getOutputTupleRaster(){return this->OutputTupleRaster;}
+    QVector<LinkNodeTuple * > getInputTupleVector(){return this->InputTupleVector;}
+    QVector<LinkNodeTuple * > getOutputTupleVector(){return this->OutputTupleVector;}
+    QVector<LinkNodeTuple * > getInputTupleDouble(){return this->InputTupleDouble;}
+    QVector<LinkNodeTuple * > getOutputTupleDouble(){return this->OutputTupleDouble;}*/
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
     QRectF boundingRect() const;
@@ -72,12 +75,12 @@ public:
     void RePosTuplePorts();
     void recalculateLandH() ;
     bool isGroup(){return true;}
-
+    virtual void setMinimized(bool b);
 
     void addModelNode(ModelNode * m) ;
 
     void changeGroupID(QString Name);
-
+    void setGroupZValue();
     void removeModelNode(ModelNode *m);
 
     virtual void updatePorts();
@@ -87,4 +90,4 @@ public slots:
     void maximize();
 };
 
-#endif // GROUPNODE_H
+#endif // ROOTGROUPNODE_H

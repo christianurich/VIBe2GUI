@@ -89,43 +89,37 @@ void GUIPort::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, Q
     painter->setBrush(color);
 
     if(isHover){
-
-        l = this->simpleTextItem->boundingRect().width()+4;
-        h = this->simpleTextItem->boundingRect().height()+4;
-        x1 = 0;
-        if (this->p->getPortType() > DM::OUTPORTS)
-            x1 = -l+14;
         QPainterPath path;
-        QPen pen(Qt::black, 1.5, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
-        path.addRoundRect(x1, 0,l,h, 10);
+        QPen pen(Qt::black, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+        path.addEllipse(-8, 8,16,16);
         painter->fillPath(path, color);
         painter->strokePath(path, pen);
-        painter->setPen(pen);
-        painter->drawText(x1+2,15, this->simpleTextItem->text());
+
 
 
     } else {
         QPainterPath path;
-        QPen pen(Qt::black, 1.5, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
-        path.addRoundRect(0, 0,14,14, 10);
+        QPen pen(Qt::black, 0.5, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+        path.addEllipse(-7, 7,14,14);
         painter->fillPath(path, color);
         painter->strokePath(path, pen);
 
-
-        //painter->drawRect(0, 0,  14, 14);
     }
-
+    QGraphicsSimpleTextItem portname(this->getPortName());
+    //portname.setScale(0.8);
+    if (this->getPortType() > DM::OUTPORTS)
+        painter->drawText(QPoint(10,portname.boundingRect().height()/2+10), this->getPortName());
+    if (this->getPortType() < DM::OUTPORTS)
+        painter->drawText(QPoint(-portname.boundingRect().width()-10,portname.boundingRect().height()/2+10), this->getPortName());
     painter->setBrush(Qt::NoBrush);
 }
 
 QRectF GUIPort::boundingRect() const {
     if(isHover){
-        QRect r (x1, 0,
-                 l, h);
+        QRect r (-10, 10,20,20);
         return r;
     } else {
-        QRect r (0, 0,
-                 14, 25);
+        QRect r (-10, 10,20,20);
         return r;
     }
 }
@@ -160,8 +154,11 @@ void GUIPort::hoverLeaveEvent ( QGraphicsSceneHoverEvent * event ) {
 }
 
 QPointF GUIPort::getConnectionNode() {
+    QPointF p(this->scenePos());
 
-    return  QPointF(this->scenePos());
+    if (this->getPortType() > DM::OUTPORTS)
+        return  QPointF( p+QPointF(-7,14));
+    return  QPointF( p+QPointF(7,14));
 }
 
 int GUIPort::getPortType() {
@@ -215,11 +212,11 @@ void GUIPort::mousePressEvent ( QGraphicsSceneMouseEvent * event )  {
 
 
                 if (getPortType() < DM::OUTPORTS) {
-            LinkMode = true;
-            this->tmp_link = new GUILink();
-            this->tmp_link->setOutPort(this);
-            this->scene()->addItem(this->tmp_link);
-        }
+                LinkMode = true;
+    this->tmp_link = new GUILink();
+    this->tmp_link->setOutPort(this);
+    this->scene()->addItem(this->tmp_link);
+}
 
 }
 DM::Port * GUIPort::getVIBePort() {
@@ -251,21 +248,11 @@ void GUIPort::mouseReleaseEvent ( QGraphicsSceneMouseEvent * event ) {
                     tmp_link = 0;
 
                     //Run Simulation
-
-                    //this->modelNode->getSimulation()->run(true, false);
-
+                    this->modelNode->getSimulation()->updateSimulation();
 
 
                 }
-                if (getPortType() == DM::OUTDOUBLEDATA &&  endLink->getPortType() == DM::INDOUBLEDATA ) {
-                    this->tmp_link->setInPort(endLink);
-                    //this->links.append(tmp_link);
-                    //Create Link
-                    tmp_link->setVIBeLink(this->modelNode->getSimulation()->addLink(tmp_link->getOutPort()->getVIBePort(), tmp_link->getInPort()->getVIBePort()));
-                    tmp_link->setSimulation(this->modelNode->getSimulation());
-                    newLink = true;
-                    tmp_link = 0;
-                }
+
             }
 
         }

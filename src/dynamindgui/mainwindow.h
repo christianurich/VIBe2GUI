@@ -81,7 +81,7 @@ private:
     QMap<QString, ModuleDescription> modules;
     QVector<ModelNode * > * mnodes;
     QVector<GroupNode * > * gnodes;
-    QVector<ProjectViewer * >  groupscenes;
+    QMap<int, ProjectViewer * >  groupscenes;
     QString currentDocument;
     int counter;
     bool running;

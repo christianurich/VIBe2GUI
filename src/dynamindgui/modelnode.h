@@ -47,7 +47,7 @@
 #include <QWidget>
 
 class ModelNodeButton;
-class GroupNode;
+class RootGroupNode;
 class GUIPort;
 class GUISimulation;
 class  VIBE_HELPER_DLL_EXPORT ModelNode : public  QObject, public QGraphicsItem
@@ -68,7 +68,7 @@ protected:
     int outputCounter;
     QVector<GUIPort*> ports;
     QVector<ModelNode * > * nodes;
-    GroupNode * parentGroup;
+    RootGroupNode * parentGroup;
 
     DM::Module * VIBeModule ;
     QGraphicsSimpleTextItem * simpleTextItem;
@@ -96,7 +96,7 @@ public:
     virtual ~ModelNode();
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
-    void setParentGroup(GroupNode * parentGroup){this->parentGroup = parentGroup;}
+    void setParentGroup(RootGroupNode * parentGroup){this->parentGroup = parentGroup;}
     void setResultWidget(MainWindow * widget) {this->ResultWidget = widget; this->guiResultObserver.setResultWidget(widget);}
 
     int getID(){return this->id;}
@@ -127,13 +127,15 @@ public:
 
     DM::Module * getVIBeModel(){return this->VIBeModule;}
     GUISimulation * getSimulation() {return this->simulation;}
-
+    GUISimulation * setSimulation(GUISimulation *s) {this->simulation = s;}
 
     virtual void updatePorts();
 
     virtual void setSelected ( bool selected ){QGraphicsItem::setSelected ( selected );}
 
     virtual void resetModel();
+
+    std::string getGroupUUID();
 
 public slots:
     void addGroup();

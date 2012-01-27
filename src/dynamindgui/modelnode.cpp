@@ -45,7 +45,7 @@
 #include <simulation.h>
 #include <QApplication>
 #include <QInputDialog>
-#include <groupnode.h>
+#include <rootgroupnode.h>
 #include <guisimulation.h>
 #include <DMcomponent.h>
 #include <DMsystem.h>
@@ -64,6 +64,10 @@ std::string ModelNode::getParameterAsString(std::string name) {
             val << this->VIBeModule->getParameter<std::string>(name);
         return val.str();
     }
+}
+
+std::string ModelNode::getGroupUUID() {
+    return this->VIBeModule->getGroup()->getUuid();
 }
 
 void ModelNode::updatePorts () {
@@ -160,9 +164,14 @@ void ModelNode::addPort(DM::Port * p) {
     GUIPort * gui_p = new  GUIPort(this, p);
     ports.append(gui_p);
     if  (p->getPortType() < DM::OUTPORTS) {
-        gui_p->setPos(this->boundingRect().width()-gui_p->boundingRect().width(),gui_p->boundingRect().height()*this->outputCounter++);
+        gui_p->setPos(this->boundingRect().width(),70+gui_p->boundingRect().height()*this->outputCounter++);
+        if (outputCounter > inputCounter)
+            this->h = h+20;
     }else {
-        gui_p->setPos(0,gui_p->boundingRect().height()*this->inputCounter++);
+        gui_p->setPos(0,70+gui_p->boundingRect().height()*this->inputCounter++);
+        if (outputCounter < inputCounter)
+            this->h = h+20;
+
     }
 }
 
@@ -197,11 +206,17 @@ ModelNode::ModelNode( DM::Module *VIBeModule,GUISimulation * simulation)
     this->setFlag(QGraphicsItem::ItemIsMovable, true);
     this->setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
 
-    this->simpleTextItem = new QGraphicsSimpleTextItem ("Module:" + QString::fromStdString(VIBeModule->getName()));
+    this->simpleTextItem = new QGraphicsSimpleTextItem ("Module: " + QString::fromStdString(VIBeModule->getClassName()));
     double w = this->simpleTextItem->boundingRect().width()+40;
+
+    double w1 = w;
+    QGraphicsSimpleTextItem tn ("Name: " + QString::fromStdString(this->VIBeModule->getName()));
+    w = w < tn.boundingRect().width() ? tn.boundingRect().width() : w;
+
+
     w = w < 140 ? 140 : w;
     l = w+4;
-    h =  this->simpleTextItem->boundingRect().height()+65;
+    h =  80;
     VIBeModule->addPortObserver( & this->guiPortObserver);
     this->updatePorts();
 
@@ -222,7 +237,7 @@ void ModelNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     }
 
     if(this->visible){
-        QPen pen(Qt::black, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+        QPen pen(Qt::black, 3, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
 
 
         QLinearGradient linearGrad(QPointF(0, h), QPointF(0, 0));
@@ -235,14 +250,16 @@ void ModelNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
         painter->setBrush(Qt::white);
         painter->setPen(pen);
         QPainterPath path;
-        path.addRoundRect(0, 0,l,h, 10);
+        path.addRect(0, 0,l,h);
         painter->fillPath(path, brush);
         painter->strokePath(path, pen);
 
-        painter->drawText(QPoint(22,15), "Name:" + QString::fromStdString(this->VIBeModule->getName()));
-        painter->drawText(QPoint(22,35), "Module:" + QString::fromStdString(this->VIBeModule->getClassName()));
-        if (this->parentGroup)
-            painter->drawText(QPoint(22,55), "Group: "+ QString::fromStdString(this->parentGroup->getVIBeModel()->getName()));
+        if (!this->VIBeModule->getName().empty())
+            painter->drawText(QPoint(22,35), "Name: " + QString::fromStdString(this->VIBeModule->getName()));
+
+        painter->drawText(QPoint(22,15), "Module: " + QString::fromStdString(this->VIBeModule->getClassName()));
+        /*if (this->parentGroup)
+            painter->drawText(QPoint(22,55), "Group: "+ QString::fromStdString(this->parentGroup->getVIBeModel()->getName()));*/
 
 
     }
@@ -400,19 +417,8 @@ void ModelNode::addGroup() {
 
         return;
     }
-    /*foreach (ModelNode * m, *(this->nodes)) {
-        if (m->getVIBeModel()->isGroup()) {
-            if (name.compare(QString::fromStdString(m->getVIBeModel()->getUuid())) == 0) {
-                gn = (GroupNode * ) m;
-            }
-        }
-    }*/
 
-    this->parentGroup = gn;
-    gn->addModelNode(this);
-    this->parentGroup->recalculateLandH();
-    this->parentGroup->setGroupZValue();
-    this->parentGroup->update();
+
 }
 
 void ModelNode::printData() {
@@ -431,10 +437,10 @@ void ModelNode::printData() {
             DM::View view = sys->getViewDefinition(name);
             DM::Component * c = sys->getComponent(view.getIdOfDummyComponent());
 
-             std::map<std::string,DM::Attribute*> attributes = c->getAllAttributes();
-             for (std::map<std::string,DM::Attribute*>::const_iterator it  = attributes.begin(); it != attributes.end(); ++it) {
-                 DM::Logger(DM::Debug) << it->first;
-             }
+            std::map<std::string,DM::Attribute*> attributes = c->getAllAttributes();
+            for (std::map<std::string,DM::Attribute*>::const_iterator it  = attributes.begin(); it != attributes.end(); ++it) {
+                DM::Logger(DM::Debug) << it->first;
+            }
         }
 
 

@@ -23,7 +23,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
  */
-#include "groupnode.h"
+#include "rootgroupnode.h"
 #include <linknode.h>
 #include <moduledescription.h>
 #include <QGraphicsDropShadowEffect>
@@ -38,14 +38,14 @@
 #include <boost/foreach.hpp>
 #include <group.h>
 #include <iostream>
-
+#include <groupnode.h>
 using namespace boost;
 
-GroupNode::GroupNode()
+RootGroupNode::RootGroupNode()
 {
 
 }
-GroupNode::~GroupNode() {
+RootGroupNode::~RootGroupNode() {
 
     while (this->childnodes.size() > 0)
         delete this->childnodes[0];
@@ -57,12 +57,12 @@ GroupNode::~GroupNode() {
 }
 
 
-void GroupNode::removeModelNode(ModelNode *m) {
+void RootGroupNode::removeModelNode(ModelNode *m) {
     int index = childnodes.indexOf(m);
     this->childnodes.remove(index);
 }
 
-void GroupNode::changeGroupID(QString Name) {
+void RootGroupNode::changeGroupID(QString Name) {
     QVector<ModelNode*> ms;// =this->groups->getModelNodes(this->getName() );
     foreach (ModelNode * m, ms) {
         //std::cout << m->getGroupID().toStdString() << std::endl;
@@ -72,11 +72,11 @@ void GroupNode::changeGroupID(QString Name) {
     std::cout << this->getName().toStdString() << std::endl;
     this->getName() = Name;
 }
-void GroupNode::minimize() {
+void RootGroupNode::minimize() {
     this->minimized = true;
     foreach(ModelNode * m, this->childnodes) {
         if (m->isGroup()) {
-            GroupNode * g = (GroupNode*) m;
+            RootGroupNode * g = (RootGroupNode*) m;
             g->setMinimized( true );
             g->minimize();            
         } else {
@@ -91,11 +91,11 @@ void GroupNode::minimize() {
 }
 
 
-void GroupNode::maximize() {
+void RootGroupNode::maximize() {
     this->minimized = false;
     foreach(ModelNode * m, this->childnodes) {
         if (m->isGroup()) {
-            GroupNode * g = (GroupNode*) m;
+            RootGroupNode * g = (RootGroupNode*) m;
             //g->maximize();
             g->setMinimized (false);
         } else {
@@ -110,7 +110,7 @@ void GroupNode::maximize() {
 
 }
 
-void GroupNode::updatePorts () {
+void RootGroupNode::updatePorts () {
     DM::Group * g = (DM::Group*)this->VIBeModule;
 
     BOOST_FOREACH (DM::PortTuple * p,g->getInPortTuples()){
@@ -124,7 +124,7 @@ void GroupNode::updatePorts () {
     ModelNode::updatePorts();
 }
 
-void GroupNode::addTuplePort(DM::PortTuple * p) {
+void RootGroupNode::addTuplePort(DM::PortTuple * p) {
     QStringList ExistingPorts;
 
     if (p->getPortType() == DM::INTUPLEDOUBLEDATA)
@@ -167,7 +167,7 @@ void GroupNode::addTuplePort(DM::PortTuple * p) {
 
 
 }
-GUIPort *  GroupNode::getGUIPort(DM::Port * p) {
+GUIPort *  RootGroupNode::getGUIPort(DM::Port * p) {
     foreach(GUIPortTuple * gui_pt,this->OutputTuplePorts) {
         if (gui_pt->inPort->getVIBePort() == p)
             return gui_pt->inPort;
@@ -188,11 +188,11 @@ GUIPort *  GroupNode::getGUIPort(DM::Port * p) {
     return 0;
 }
 
-void GroupNode::removeTuplePort(int Type, QString s) {
+void RootGroupNode::removeTuplePort(int Type, QString s) {
 
 }
 
-GroupNode::GroupNode(  DM::Module *module, GUISimulation * s): ModelNode( module, s)
+RootGroupNode::RootGroupNode(  DM::Module *module, GUISimulation * s): ModelNode( module, s)
 {
 
     this->childnodes = QVector<ModelNode*>();
@@ -212,10 +212,10 @@ GroupNode::GroupNode(  DM::Module *module, GUISimulation * s): ModelNode( module
     this->inputCounter = 1;
     this->setZValue(-1);
     this->setGraphicsEffect(new  QGraphicsDropShadowEffect(this));
-    //this->setVisible(false);
+    this->setVisible(true);
 
-    this->setFlag(QGraphicsItem::ItemIsSelectable, true);
-    this->setFlag(QGraphicsItem::ItemIsMovable, true);
+    this->setFlag(QGraphicsItem::ItemIsSelectable, false);
+    this->setFlag(QGraphicsItem::ItemIsMovable, false);
     this->setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
 
     this->simpleTextItem = new QGraphicsSimpleTextItem (QString::number(id));
@@ -256,7 +256,7 @@ GroupNode::GroupNode(  DM::Module *module, GUISimulation * s): ModelNode( module
 
 }
 
-void GroupNode::RePosTuplePorts() {
+void RootGroupNode::RePosTuplePorts() {
     foreach(GUIPortTuple * pt, this->OutputTuplePorts) {
         GUIPort * gui_p = pt->inPort;
 
@@ -267,8 +267,9 @@ void GroupNode::RePosTuplePorts() {
     }
     minimizeButton->setPos(l-18, 4);
 
+
 }
-void GroupNode::setSelected(  bool selected ) {
+void RootGroupNode::setSelected(  bool selected ) {
     foreach(ModelNode * m, this->childnodes) {
         m->setSelected(true);
         if (m->isGroup()) {
@@ -281,10 +282,57 @@ void GroupNode::setSelected(  bool selected ) {
 
 
 }
+void RootGroupNode::setMinimized(bool b) {
+    this->minimized = b;
 
-void GroupNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+    bool visible = true;
 
+    if  (b) {
+        if (this->parentGroup != 0) {
+            if (this->parentGroup->isMinimized()) {
+                visible = false;
 
+            }
+        }
+    }
+    this->visible = visible;
+
+    foreach(GUIPortTuple * pt, OutputTuplePorts) {
+        if (this->isMinimized()) {
+            pt->inPort->setVisible(false);
+        } else {
+            pt->inPort->setVisible(true);
+            pt->outPort->setVisible(true);
+        }
+        if (this->parentGroup != 0) {
+            if (this->parentGroup->isMinimized()) {
+                pt->outPort->setVisible(false);
+            }
+        }
+    }
+    foreach(GUIPortTuple * pt, InPortTuplePorts) {
+        if (this->parentGroup != 0) {
+            if (this->parentGroup->isMinimized()) {
+                pt->inPort->setVisible(false);
+            }
+        }
+        if (this->isMinimized()) {
+            pt->outPort->setVisible(false);
+        } else {
+            pt->outPort->setVisible(true);
+            pt->inPort->setVisible(true);
+        }
+    }
+
+    foreach(ModelNode * m, this->childnodes) {
+        m->setMinimized( b );
+    }
+}
+void RootGroupNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+
+    QString name;
+    //DM::Group;
+    this->setGroupZValue();
     std::cout << l << "/" << h << std::endl;
     if (this->visible) {
         recalculateLandH();
@@ -295,14 +343,14 @@ void GroupNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
         } else {
             painter->setBrush(Qt::white);
         }
-        this->simpleTextItem->setText("Name:"+ QString::fromStdString(this->VIBeModule->getName())+" " +QString::number(this->zValue()));
+        this->simpleTextItem->setText("Name:"+ QString::fromStdString(this->VIBeModule->getName()));
         if (simpleTextItem->boundingRect().width()+40 > l)
                 l = simpleTextItem->boundingRect().width()+40;
         painter->drawRect(0, 0, l,h);
         if (this->childnodes.size() > 0)
             this->setPos(x1-40, y1-20);
 
-        painter->drawText(QPoint(5,15), "Name:"+ QString::fromStdString(this->VIBeModule->getName())+" " +QString::number(this->zValue()));
+        painter->drawText(QPoint(5,15), "Name:"+ QString::fromStdString(this->VIBeModule->getName()));
 
 
         if((RePosFlag) != 0) {
@@ -315,20 +363,49 @@ void GroupNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     }
 
 }
-QRectF GroupNode::boundingRect() const {
+QRectF RootGroupNode::boundingRect() const {
     return QRect(0, 0, l, h);
 
 }
-void GroupNode::addModelNode(ModelNode *m) {
-    //this->childnodes.push_back(m);
-    //m->getVIBeModel()->setGroup((DM::Group *)this->getVIBeModel());
+void RootGroupNode::addModelNode(ModelNode *m) {
+    this->childnodes.push_back(m);
+    m->getVIBeModel()->setGroup((DM::Group *)this->getVIBeModel());
+    m->setParentGroup(this);
+    this->recalculateLandH();
+    this->update();
+
+}
+void RootGroupNode::mouseMoveEvent ( QGraphicsSceneMouseEvent * event )  {
+    this->setSelected(true);
+
+    if (this->parentGroup != 0) {
+        this->parentGroup->recalculateLandH();
+        this->parentGroup->update();
+    }
+
+    ModelNode::QGraphicsItem::mouseMoveEvent(event);
 }
 
 
+void  RootGroupNode::setGroupZValue() {
+    DM::Logger(DM::Debug) << "Set Z Level";
+    if (this->parentGroup != 0) {
+        DM::Logger(DM::Debug) << "ParentGroup Z Level" << this->parentGroup->zValue();
+        if (this->parentGroup->zValue()+1 != this->zValue())
+            this->setZValue(this->parentGroup->zValue()+1);
+    }
+    foreach (ModelNode * m, this->childnodes ){
+        if(m->getVIBeModel()->isGroup()) {
+            GroupNode * g = (GroupNode * ) m;
+            //g->setGroupZValue();
+        } else {
+            if (m->zValue() != this->zValue()+1)
+                m->setZValue(this->zValue()+1);
+        }
+    }
+}
 
-
-
-void GroupNode::recalculateLandH() {
+void RootGroupNode::recalculateLandH() {
     float lold = l;
 
 
@@ -366,8 +443,10 @@ void GroupNode::recalculateLandH() {
     if((lold - l) != 0) {
         RePosFlag = true;
         this->prepareGeometryChange();
-        this->update();
+        this->update(this->boundingRect());
     }
-
+    if (this->parentGroup != 0) {
+        this->parentGroup->recalculateLandH();
+    }
 
 }

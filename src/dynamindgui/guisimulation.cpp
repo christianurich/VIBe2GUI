@@ -35,6 +35,17 @@ GUISimulation::GUISimulation() : Simulation()
 
 
 }
+
+GroupNode * GUISimulation::getGroupNode(DM::Group * g) {
+
+    foreach (GroupNode * gn, this->groupNodes) {
+        if (gn->getVIBeModel() == g)
+            return gn;
+    }
+
+    return 0;
+}
+
 void GUISimulation::GUIaddModule( DM::Module * m, QPointF pos)
 {
     //Create Visual Representation of the Module
@@ -42,16 +53,23 @@ void GUISimulation::GUIaddModule( DM::Module * m, QPointF pos)
         ModelNode * node = new ModelNode(m, this);
         this->modelNodes.append(node);
         node->setPos(pos);
+
+        GroupNode * gn = this->getGroupNode(node->getVIBeModel()->getGroup());
+        if (gn != 0)
+            gn->addModelNode(node);
         emit addedModule(node);
     }
     if (m->isGroup()) {
         GroupNode * node = new GroupNode(m, this);
         this->groupNodes.append(node);
         node->setPos(pos);
+        GroupNode * gn = this->getGroupNode(node->getVIBeModel()->getGroup());
+        if (gn != 0)
+            gn->addModelNode(node);
         emit addedGroup(node);
     }
 
-    this->run(true, false);
+    this->updateSimulation();
 
 }
 
@@ -59,14 +77,19 @@ void GUISimulation::registerRootNode() {
     this->GUIaddModule(this->getRootGroup(), QPointF(0,0));
 }
 
-void GUISimulation::GUIaddModule(QString name, QPointF pos)
+void GUISimulation::GUIaddModule(QString name, QPointF pos, DM::Module *group)
 {
     //Create Module in DynaMind
 
     DM::Module * m = this->addModule(name.toStdString());
-
+    m->setGroup((DM::Group*)group);
     this->GUIaddModule(m, pos);
-
 
 }
 
+
+void GUISimulation::updateSimulation()
+{
+    this->run(true, false);
+
+}

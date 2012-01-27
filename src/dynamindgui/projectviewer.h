@@ -40,7 +40,7 @@
 #include <simulation.h>
 class ModelNode;
 class GroupNode;
-
+class RootGroupNode;
 
 class  VIBE_HELPER_DLL_EXPORT ProjectViewer :public QGraphicsScene
 {
@@ -70,11 +70,11 @@ private:
     //GUISimulation * simulation;
     MainWindow * ResultViewer;
 
-    GroupNode * rootGroup;
+    RootGroupNode * rootGroup;
 
  signals:
     void NewGroupAdded(GroupNode  *);
-    void NewModule(QString name, QPointF pos);
+    void NewModule(QString name, QPointF pos, DM::Module* group);
 
 public slots:
     void addModule(ModelNode *m);

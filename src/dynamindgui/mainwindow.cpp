@@ -138,16 +138,17 @@ void MainWindow::addNewGroupWindows(GroupNode * g) {
 
     connect(simulation, SIGNAL(addedGroup(GroupNode*)), newgroup, SLOT(addGroup(GroupNode*)));
     connect(simulation, SIGNAL(addedModule(ModelNode*)), newgroup, SLOT(addModule(ModelNode*)));
-    connect(newgroup, SIGNAL(NewModule(QString,QPointF)), simulation, SLOT(GUIaddModule(QString,QPointF)));
+    connect(newgroup, SIGNAL(NewModule(QString,QPointF, DM::Module *)), simulation, SLOT(GUIaddModule(QString,QPointF, DM::Module  *)));
 
     newgroup->setResultViewer(this);
-    this->groupscenes << newgroup;
+
 
 
     QGraphicsView * gv = new QGraphicsView(newgroup);
+    gv->setRenderHints(QPainter::Antialiasing);
     gv->setAcceptDrops(true);
 
-    this->tabWidget_4->addTab(gv,g->getName());
+    this->groupscenes[this->tabWidget_4->addTab(gv,g->getName())] = newgroup;
 
 }
 
@@ -574,7 +575,7 @@ void MainWindow::loadSimulation(int id) {
                     if (m->getVIBeModel()->getUuid().compare(GroupUUID) == 0) {
                         GroupNode * gn = (GroupNode * ) m;
                         gn->addModelNode(module);
-                        module->setParentGroup(gn);
+                        //module->setParentGroup(gn);
 
                     }
                 }
@@ -635,55 +636,27 @@ MainWindow::~MainWindow() {
     delete this->simulation;
 }
 
-void MainWindow::on_actionZoomIn_activated()
-{
-    /*QWidget * view = (QWidget *)   this->tabWidget_2->currentWidget();
-    if (view->objectName().compare("Model_View") == 0){
-        graphicsView->scale(1.2, 1.2);
-        return;
-    }
-    if (view->objectName().compare("Result_View") == 0){
-        return;
-    }
-    if (view->objectName().compare("Result_View") != 0){
-        GUIImageResultView * v = ( GUIImageResultView *) view;
-        v->getView()->scale(1.2, 1.2);
-        return;
-    }*/
+void MainWindow::on_actionZoomIn_activated(){
+    int i= this->tabWidget_2->currentIndex();
+    QGraphicsView * view = groupscenes[i]->views()[0];
+
+    view->scale(1.2, 1.2);
+
 }
 
 void MainWindow::on_actionZoomOut_activated()
 {
-    /*QWidget * view = (QWidget *)   this->tabWidget_2->currentWidget();
-    if (view->objectName().compare("Model_View") == 0){
-        graphicsView->scale(0.8, 0.8);
-        return;
-    }
-    if (view->objectName().compare("Result_View") == 0){
-        //graphicsView->scale(1.2, 1.2);
-        return;
-    }
-    if (view->objectName().compare("Result_View") != 0){
-        GUIImageResultView * v = ( GUIImageResultView *) view;
-        v->getView()->scale(0.8, 0.8);
-        return;
-    }*/
+    int i= this->tabWidget_2->currentIndex();
+    QGraphicsView * view = groupscenes[i]->views()[0];
+    view->scale(0.8, 0.8);
 }
 
 void MainWindow::on_actionZoomReset_activated()
 {
-    /*QWidget * view = (QWidget *)   this->tabWidget_2->currentWidget();
-    if (view->objectName().compare("Model_View") == 0){
-        graphicsView->fitInView(graphicsView->sceneRect(), Qt::KeepAspectRatio);
-        return;
-    }
-    if (view->objectName().compare("Result_View") == 0){
-        return;
-    }
-    if (view->objectName().compare("Result_View") != 0){
-        GUIImageResultView * v = ( GUIImageResultView *) view;
-        v->getView()->fitInView(graphicsView->sceneRect(), Qt::KeepAspectRatio);
-        return;
-    }*/
+    int i= this->tabWidget_2->currentIndex();
+    QGraphicsView * view = groupscenes[i]->views()[0];
+    view->fitInView(view->sceneRect(), Qt::KeepAspectRatio);
+
+
 
 }

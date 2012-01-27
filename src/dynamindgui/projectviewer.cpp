@@ -33,6 +33,7 @@
 #include <moduleregistry.h>
 #include <modelnode.h>
 #include <groupnode.h>
+#include <rootgroupnode.h>
 #include <sstream>
 #include <fixedgroupports.h>
 #include <guisimulation.h>
@@ -46,22 +47,33 @@ ProjectViewer::ProjectViewer( GroupNode *g,  QWidget *parent) : QGraphicsScene(p
     this->id = 0;
     this->mnodes;
 
+    //Cretae New Visual Representation
 
-
-    this->rootGroup = g;
-    /*if (g == g->getSimulation()->getRootGroup()) {
-       return;
-    }*/
+    RootGroupNode * rg = new RootGroupNode(g->getVIBeModel(),g->getSimulation());
+    rg->setPos(0,0);
+    this->rootGroup = rg;
+    this->addItem(rg);
 
 
 }
 
 void ProjectViewer::addModule(ModelNode *m)
 {
+
+    //Only add if root group is the same
+    if (m->getVIBeModel()->getGroup() != this->rootGroup->getVIBeModel()) {
+        return;
+    }
+    this->rootGroup->addModelNode(m);
     this->addItem(m);
 }
 
 void ProjectViewer::addGroup(GroupNode *g) {
+    //Only add if root group is the same
+    if (g->getVIBeModel()->getGroup() != this->rootGroup->getVIBeModel()) {
+        return;
+    }
+    this->rootGroup->addModelNode(g);
     this->addItem(g);
 
 }
@@ -82,7 +94,7 @@ void ProjectViewer::dropEvent(QGraphicsSceneDragDropEvent *event)
     std::string type = lw->currentItem()->text(1).toStdString();
     if (type.compare("Module") == 0) {
         //ss << module << "_" << this->id++;
-        emit NewModule(classname, event->scenePos());
+        emit NewModule(classname, event->scenePos(), this->rootGroup->getVIBeModel());
 
 
     } else {

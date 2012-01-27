@@ -34,12 +34,14 @@
 
 class ModelNode;
 class GroupNode;
+class GUILink;
 class GUISimulation :  public DM::Simulation
 {
     Q_OBJECT
 public:
     GUISimulation();
     void registerRootNode();
+    GroupNode * getGroupNode(DM::Group * g);
 
 private:
     QVector<ModelNode*> modelNodes;
@@ -50,8 +52,13 @@ signals:
     void addedGroup(GroupNode*);
 
 public slots:
-    void GUIaddModule( QString  name, QPointF pos);
+    void GUIaddModule( QString  name, QPointF pos, DM::Module *group);
     void GUIaddModule(DM::Module *, QPointF pos);
+    void updateSimulation();
+
+
+
 };
 
 #endif // GUISIMULATION_H
+
